@@ -230,7 +230,7 @@ falta definir formato de entrada, prompts ni reglas de confirmación humana.
 
 ## 7. Offline
 
-**Estado: Acordado** el modelo; **Propuesto** el manejo de cuota y el detalle de la sincronización.
+**Estado: Acordado** el modelo, el manejo de cuota y la sincronización.
 
 El lector está **100 % online** o, si instaló la PWA, **100 % offline**. No hay estados
 intermedios por receta.
@@ -270,9 +270,11 @@ sin imponerlo y sin obligar a descargar de nuevo lo que no cambió.
 El riesgo cambia de forma: ya no es «se desalojan recetas sueltas» sino «el catálogo completo
 puede no entrar o ser desalojado entero».
 
+**Acordado:** el paquete **no se descarga sin avisar**. Antes de empezar se muestra el peso
+estimado y se pide confirmación; cancelar deja la app online, sin descarga parcial.
+
 **Propuesto, sin confirmar:**
 
-- Mostrar el peso estimado y pedir confirmación antes de descargar; cancelar deja la app online.
 - Solicitar almacenamiento persistente.
 - Avisar si no entra antes de empezar, en lugar de fallar a mitad.
 - Escritura atómica y marca de completez: el paquete nunca se da por completo a medias.
@@ -369,11 +371,11 @@ La búsqueda **no distingue mayúsculas ni tildes**: «pure» encuentra «puré�
 sin tildes; en el navegador, el término se normaliza antes de consultar. La página servida
 conserva sus tildes: la normalización no toca lo que el lector ve.
 
-**Propuesto para la implementación:** entregar a Pagefind una copia normalizada del HTML
-generado, con su API de Node, en vez de duplicar texto oculto dentro de `data-pagefind-body`; así
-el HTML publicado queda intacto. Consecuencia a asumir: los extractos de Pagefind salen del texto
-normalizado y aparecen sin tildes, por eso la línea visible se arma con los metadatos propios y el
-extracto sólo se usa como respaldo.
+**Mecanismo acordado:** entregar a Pagefind una copia normalizada del HTML generado, con su API
+de Node, en vez de duplicar texto oculto dentro de `data-pagefind-body`; así el HTML publicado
+queda intacto. Consecuencia asumida: los extractos de Pagefind salen del texto normalizado y
+aparecen sin tildes, por eso la línea visible se arma con los metadatos propios y el extracto sólo
+se usa como respaldo.
 
 ### Motor: Pagefind
 
@@ -461,6 +463,23 @@ ser estática y las estrellas salen del modelo de ficha.
 Consecuencia: la carga es manual y desaparece el pendiente de definir script local o
 procedimiento conversacional. La restricción de no usar imágenes generadas con IA del apartado 5
 sigue vigente y es independiente de esta decisión.
+
+### Descarga receta por receta — reemplazada por el paquete completo
+
+1. Se definió que la PWA descargaría recetas individualmente, cada una completa con sus fotos,
+   y que instalar no bajaría el catálogo.
+2. Al definirse la búsqueda con Pagefind quedó expuesto el costo real: su índice es un bundle
+   único y hay que precachearlo completo para poder buscar sin conexión, así que limitar el
+   alcance a lo descargado no ahorraba nada.
+3. **Se reemplazó por el modelo todo-o-nada**: 100 % online o el catálogo completo guardado, con
+   sincronización de lo nuevo. Ver apartado 7.
+
+> «dejemos que todo sea online 100% u offline 100% para PWA s, con la opcion de que pueda
+> sincronizar nuevas recetas»
+
+Consecuencia: desaparecen la selección por receta, la convivencia de recetas disponibles y no
+disponibles en el mismo listado y la política de desalojo por descarga suelta. El riesgo de cuota
+pasa a ser del paquete entero.
 
 ### Navegación de libro — reemplazada
 
