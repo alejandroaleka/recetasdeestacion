@@ -444,12 +444,28 @@ El modelo combina dos niveles complementarios:
 
 ## 10. Herramientas internas de desarrollo
 
-**Estado: Acordado** el concepto; **Pendiente** el contenido.
+**Estado: Acordado**
 
-Un **simulador interactivo de escenarios** acompañado de diagramas visuales, exclusivamente
+Un **simulador interactivo de escenarios** acompañado de diagramas visuales SVG, exclusivamente
 para desarrollo interno: sirve para entender y validar la dinámica de cada proceso.
 
-Debe quedar **fuera** de rutas públicas, navegación, recursos y paquete publicado. No es el
+Escenarios implementados en `src/dev/simulator.mjs` (servido solo en desarrollo en
+`/__dev/simulador` por `scripts/dev-server.mjs`):
+
+1. `ubicacion-estacionalidad`: los 3 estados persistidos (`sin-preferencia`, `omitida`, `elegida`),
+   resolución local de coordenadas por bounding-box, incertidumbre explícita sin cobertura y
+   vínculo explícito `productosEstacion` sin falsos positivos de texto libre.
+2. `validacion-borradores`: borrador libre, publicada incompleta omitida (con
+   `.astro/build-report.json` y banner de desarrollo) y publicada completa, con rechazo de
+   imágenes IA, SVG y sobrepeso.
+3. `navegacion-busqueda-accesibilidad`: receta activa única compartida (A → C queda C),
+   Anterior / Siguiente solo por visibles bajo filtro, intersección con búsqueda sin tildes y
+   modo híbrido «Lectura simple: Sí / No».
+4. `offline-sincronizacion-atomica`: ciclo todo-o-nada (confirmación con peso, `persist()`,
+   `estimate()`, staging atómico con commit/rollback, detección de desalojo y sync diferencial).
+
+Debe quedar **fuera** de rutas públicas, navegación, recursos y paquete publicado: el build lo
+verifica con `assertNoSimulatorInDist(dist)` junto a `assertNoKeystaticInDist(dist)`. No es el
 panel de administración ni una función para lectores.
 
 Representa reglas acordadas; no sustituye pruebas funcionales de la aplicación.
@@ -608,6 +624,6 @@ la puesta en marcha:
 
 | Área | Qué falta verificar o detallar al implementar |
 |---|---|
-| Seguridad | Verificar que `/keystatic` y `/api/keystatic` queden bloqueados y ausentes en el build de producción |
-| Búsqueda | Verificar las 3 comprobaciones técnicas de Pagefind y normalización listadas en §11 |
-| Herramientas internas | Detallar los escenarios concretos del simulador interno de desarrollo (§10) |
+| Seguridad | Verificado en código: `assertNoKeystaticInDist(dist)` en `scripts/build.mjs` + suite `npm test` y `npm run build` |
+| Búsqueda | Verificadas en código las 3 comprobaciones técnicas de Pagefind y normalización de §11 (`npm test` + `npm run build`) |
+| Herramientas internas | Acordado y verificado en código: los 4 escenarios del simulador de §10 con `assertNoSimulatorInDist(dist)` en `scripts/build.mjs`; la suite (`npm test` + `npm run build`) lo verifica automáticamente |
