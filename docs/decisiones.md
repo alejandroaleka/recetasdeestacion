@@ -133,7 +133,8 @@ src/content/recetas/<slug>/paso-1.webp
 | Dificultad | |
 | Categoría principal | |
 | Tags | |
-| Estaciones | |
+| Estaciones | Cargadas a mano por receta (Primavera, Verano, Otoño, Invierno) |
+| Productos de estación | Opcional; referencias explícitas al catálogo estacional en Keystatic |
 | Ingredientes | Ver modelo híbrido abajo |
 | Pasos | Numerados, con texto y foto opcional |
 | Fuente y autoría | Propia, libro, sitio o video |
@@ -288,8 +289,9 @@ estimado y se pide confirmación; cancelar deja la app online, sin descarga parc
 
 **Estado: Acordado**
 
-El país es una **preferencia del visitante**, no un dato fijo del proyecto. Se elige
-manualmente o aceptando una geolocalización voluntaria, y puede cambiarse en cualquier momento.
+El país y la subregión climática son una **preferencia del visitante**, no un dato fijo del
+proyecto. Se eligen sobre la **tabla cerrada de países y subregiones curadas** (manualmente o
+aceptando una geolocalización voluntaria) y pueden cambiarse en cualquier momento.
 
 Se guarda en **localStorage**, no en cookies.
 
@@ -297,36 +299,59 @@ Se guarda en **localStorage**, no en cookies.
 
 1. **Sin preferencia guardada** — se muestra una invitación no bloqueante.
 2. **Ubicación omitida o rechazada** — se recuerda esa decisión y no se repite la invitación automáticamente.
-3. **País elegido** — se recuerda y permite destacados pertinentes, sin imponer filtros.
+3. **País y subregión elegidos** — se recuerdan y permiten destacados pertinentes, sin imponer filtros.
 
 Si se borra el almacenamiento, vuelve a no existir preferencia y la invitación puede
 reaparecer.
 
-### Sin país
+### Sin país o fuera de la tabla curada
 
 No se infiere ubicación por IP ni por idioma, no se aplica una estación por defecto y no se
 muestran destacados de temporada actual. Se muestra el catálogo completo, y búsqueda y filtros
 manuales siguen disponibles.
 
-No se guardan coordenadas ni se hace seguimiento. La geolocalización no promete funcionar
-offline: entrega coordenadas, no un país, y resolver el país requiere geocodificación inversa.
+### Resolución local sin proveedor externo
 
-**Pendiente:** proveedor de geocodificación inversa y granularidad regional.
+**Acordado:** no se usa ningún servicio externo de geocodificación inversa. Como el catálogo
+opera sobre una tabla cerrada de países y subregiones curadas, la ubicación se resuelve con el
+selector directo o, si el visitante usa la geolocalización del navegador, contrastando las
+coordenadas localmente en el dispositivo contra los límites estáticos de las regiones curadas.
+No se guardan coordenadas, no se envían a terceros y no se hace seguimiento.
 
 ---
 
 ## 9. Estacionalidad
 
-**Estado: Acordado** el filtro; **Pendiente** la fuente de datos.
+**Estado: Acordado** el modelo; **Pendiente** la carga inicial de la tabla curada.
 
 Existe un filtro por **Primavera, Verano, Otoño e Invierno** para platos que usan productos de
 estación, además de tags y búsqueda directa.
 
-El país orienta, pero no garantiza la misma estacionalidad dentro de un país con regiones
-climáticas distintas: donde no haya dato regional fiable debe mostrarse incertidumbre en lugar
-de inventarlo.
+### Estación de la receta y tabla de productos
 
-**Pendiente:** fuente de calendarios estacionales y si la estación se carga a mano por receta.
+El modelo combina dos niveles complementarios:
+
+1. **Estación manual por receta:** cada receta declara a mano en Keystatic en qué estación o
+   estaciones aplica (`Primavera`, `Verano`, `Otoño`, `Invierno`). Este campo gobierna el filtro
+   por estación del catálogo.
+2. **Catálogo de productos de estación con vínculo explícito:** existe una tabla curada de
+   productos de estación. Cada receta referencia explícitamente en Keystatic qué productos de ese
+   catálogo utiliza, en lugar de cruzar el texto libre de los ingredientes. Así se destaca qué
+   producto puntual está en temporada sin falsos positivos con conservas o procesados (por
+   ejemplo, «tomate en lata» frente a «tomate fresco»).
+
+### Calendario cerrado por país y subregión climática
+
+- Los calendarios estacionales se definen en una **tabla cerrada de países y subregiones
+  climáticas curadas** (archivos versionados junto con el resto del contenido).
+- Cuando el lector tiene seleccionados un país y una subregión presentes en la tabla, la
+  aplicación conoce qué estación está vigente y qué productos del catálogo están en temporada.
+- El país por sí solo no garantiza la misma estacionalidad cuando abarca regiones climáticas
+  distintas: si el país o la subregión del lector no están cubiertos por la tabla (o solo se
+  indicó el país sin subregión), **se muestra explícitamente la incertidumbre en lugar de
+  inventar el dato**, y queda disponible el filtro manual por las cuatro estaciones.
+
+**Pendiente:** listado inicial de países, subregiones climáticas y productos de estación a cargar.
 
 ---
 
@@ -493,11 +518,9 @@ inspiración y no son material autorizado para reutilizar.
 
 | Área | Qué falta |
 |---|---|
-| Estacionalidad | Fuente de calendarios y carga manual o derivada |
-| Offline | Confirmación y peso del paquete, persistencia y sincronización |
+| Offline | Persistencia, detección de desalojo y detalle de sincronización |
 | Diseño | Bocetos de portafichero, índice y lectura |
 | Accesibilidad | Rótulos y ubicación del interruptor de modo accesible |
 | Seguridad | Verificar el bloqueo del panel en producción |
-| Contenido | Formato del informe de build y aviso en el panel |
+| Contenido | Formato del informe de build, aviso en el panel y carga inicial de la tabla estacional |
 | Publicación | Alojamiento |
-| Datos | Proveedor de geocodificación inversa |
