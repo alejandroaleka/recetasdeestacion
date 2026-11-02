@@ -1,0 +1,27 @@
+{
+  "title": "Recetario — Vistas de Portafichero, Índice y Lectura",
+  "brief": "Tres direcciones visuales e interactivas para las vistas principales de Recetario (Portafichero, Índice/Búsqueda con Pagefind y Lectura de receta), con cabecera superior fija e interruptor «Lectura simple: Sí / No».",
+  "artboards": [
+    {
+      "file": "01-fichero-clasico-editorial.html",
+      "title": "Fichero Clásico de Cocina (Papel y Madera)",
+      "tradeoff": "Metáfora física cálida y evidente con pestañas troqueladas y tipografía editorial serif; ocupa algo más de aire vertical.",
+      "width": 1440,
+      "height": 920
+    },
+    {
+      "file": "02-botanico-estacional.html",
+      "title": "Cuaderno de Estación (Mercado y Herbario)",
+      "tradeoff": "Pestañas laterales compactas y productos de estación en primer plano para decidir rápido qué cocinar hoy; metáfora de fichero más sobria.",
+      "width": 1440,
+      "height": 920
+    },
+    {
+      "file": "03-taller-culinario-alto-contraste.html",
+      "title": "Mesada de Trabajo (Ficha Técnica de Cocina)",
+      "tradeoff": "Máxima legibilidad práctica a distancia con botones táctiles grandes y cantidades tabulares; menor calidez editorial.",
+      "width": 1440,
+      "height": 920
+    }
+  ]
+}

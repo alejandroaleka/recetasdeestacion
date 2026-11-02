@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "chosen": "01-fichero-clasico-editorial.html",
+  "handoffs": {
+    "01-fichero-clasico-editorial.html": {
+      "status": "sent",
+      "queued": false,
+      "sentAt": "2026-11-02T16:38:25.309Z",
+      "startedAt": null,
+      "implementedAt": null
+    }
+  }
+}

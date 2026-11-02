@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>01 — Fichero Clásico de Cocina (Papel y Madera)</title>
+  <style>
+    :root {
+      --bg-canvas: #f2ece1;
+      --bg-paper: #fffdf8;
+      --bg-card-back: #f5ebd9;
+      --bg-wood: #5b3a24;
+      --bg-wood-dark: #3d2516;
+      --bg-header: #fdf9f0;
+      --ink-primary: #231912;
+      --ink-secondary: #5a4638;
+      --ink-muted: #755e4e;
+      --accent: #8f3418;
+      --accent-soft: #f9e6df;
+      --season-bg: #e7f0e4;
+      --season-ink: #234d20;
+      --border-warm: #d6c5ae;
+      --border-strong: #6e523d;
+      --focus-ring: #0b5cab;
+      --font-serif: Georgia, 'Times New Roman', Times, serif;
+      --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --base-scale: 1;
+    }
+
+    body.simple-mode {
+      --bg-canvas: #ffffff;
+      --bg-paper: #ffffff;
+      --bg-header: #f4f4f4;
+      --ink-primary: #111111;
+      --ink-secondary: #222222;
+      --ink-muted: #444444;
+      --accent: #7a1c00;
+      --accent-soft: #f2e2dc;
+      --border-warm: #222222;
+      --border-strong: #000000;
+      --base-scale: 1.12;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 24px;
+      background: var(--bg-canvas);
+      color: var(--ink-primary);
+      font-family: var(--font-sans);
+      font-size: calc(15px * var(--base-scale));
+      line-height: 1.5;
+    }
+
+    /* Artboard Showcase Header */
+    .board-banner {
+      max-width: 1380px;
+      margin: 0 auto 20px;
+      padding: 16px 22px;
+      background: var(--bg-paper);
+      border: 1px solid var(--border-warm);
+      border-radius: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      box-shadow: 0 2px 8px rgba(35, 25, 18, 0.06);
+    }
+
+    .board-banner h1 {
+      margin: 0 0 4px;
+      font-family: var(--font-serif);
+      font-size: 20px;
+      color: var(--ink-primary);
+    }
+
+    .board-banner p {
+      margin: 0;
+      font-size: 13.5px;
+      color: var(--ink-secondary);
+    }
+
+    .board-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .pill-info {
+      font-size: 12.5px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-weight: 600;
+      border: 1px solid rgba(143, 52, 24, 0.25);
+    }
+
+    /* 3-Phone Grid */
+    .phones-grid {
+      max-width: 1380px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      align-items: start;
+    }
+
+    .phone-column {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .column-label {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      padding: 0 6px;
+    }
+
+    .column-label h2 {
+      margin: 0;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--ink-primary);
+    }
+
+    .column-label span {
+      font-size: 12px;
+      color: var(--ink-secondary);
+    }
+
+    .phone-frame {
+      background: var(--bg-paper);
+      border: 2px solid var(--border-strong);
+      border-radius: 26px;
+      overflow: hidden;
+      box-shadow: 0 12px 28px rgba(35, 25, 18, 0.12);
+      display: flex;
+      flex-direction: column;
+      min-height: 780px;
+      max-height: 780px;
+      position: relative;
+    }
+
+    body.simple-mode .phone-frame {
+      border-radius: 8px;
+      box-shadow: none;
+      border-width: 3px;
+    }
+
+    /* Fixed Top Header (§3 & §8 & §7) */
+    .app-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: var(--bg-header);
+      border-bottom: 2px solid var(--border-warm);
+      padding: 10px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .header-top-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .brand-title {
+      font-family: var(--font-serif);
+      font-weight: 700;
+      font-size: 16px;
+      color: var(--ink-primary);
+      letter-spacing: -0.01em;
+    }
+
+    /* Interruptor "Lectura simple: Sí / No" (§3 Acordado) */
+    .simple-toggle {
+      appearance: none;
+      background: var(--bg-paper);
+      color: var(--ink-primary);
+      border: 2px solid var(--border-strong);
+      border-radius: 999px;
+      padding: 5px 11px;
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.15s ease;
+    }
+
+    .simple-toggle[aria-pressed="true"] {
+      background: var(--ink-primary);
+      color: var(--bg-paper);
+    }
+
+    .simple-toggle:focus-visible,
+    button:focus-visible,
+    input:focus-visible,
+    a:focus-visible {
+      outline: 3px solid var(--focus-ring);
+      outline-offset: 2px;
+    }
+
+    .toggle-state {
+      padding: 1px 6px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 11.5px;
+    }
+
+    .simple-toggle[aria-pressed="true"] .toggle-state {
+      background: #ffffff;
+      color: #111111;
+    }
+
+    .header-meta-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      flex-wrap: wrap;
+      font-size: 11.5px;
+    }
+
+    .location-chip {
+      background: var(--season-bg);
+      color: var(--season-ink);
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-weight: 600;
+      border: 1px solid rgba(35, 77, 32, 0.25);
+    }
+
+    .offline-chip {
+      color: var(--ink-secondary);
+      background: rgba(90, 70, 56, 0.08);
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-weight: 600;
+    }
+
+    .search-bar {
+      display: flex;
+      align-items: center;
+      background: var(--bg-paper);
+      border: 1.5px solid var(--border-strong);
+      border-radius: 8px;
+      padding: 5px 10px;
+      gap: 6px;
+    }
+
+    .search-bar input {
+      border: none;
+      background: transparent;
+      width: 100%;
+      font-size: 13px;
+      color: var(--ink-primary);
+      font-family: inherit;
+    }
+
+    .a11y-notice {
+      display: none;
+      background: #fff4cc;
+      color: #332400;
+      border: 1px solid #8a6d1b;
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    body.simple-mode .a11y-notice {
+      display: block;
+    }
+
+    /* Viewport Content Area */
+    .phone-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    /* Season Filter Bar */
+    .filter-row {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .filter-chip {
+      background: var(--bg-paper);
+      border: 1px solid var(--border-warm);
+      color: var(--ink-secondary);
+      padding: 4px 9px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .filter-chip[aria-pressed="true"] {
+      background: var(--accent);
+      color: #ffffff;
+      border-color: var(--accent);
+    }
+
+    /* PORTAFICHERO (§2) */
+    .cardbox-stage {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      transition: opacity 0.25s ease, transform 0.25s ease;
+    }
+
+    .cardbox-stage.extracting {
+      opacity: 0.18;
+      transform: translateY(10px) scale(0.98);
+    }
+
+    body.simple-mode .cardbox-stage {
+      transition: none;
+    }
+
+    /* Wooden Box Header with Current Active Title on the drawing (§2 quote) */
+    .cardbox-drawing {
+      background: linear-gradient(180deg, var(--bg-wood) 0%, var(--bg-wood-dark) 100%);
+      color: #fdf8ee;
+      border-radius: 14px 14px 8px 8px;
+      padding: 12px 14px;
+      border: 2px solid #2b180d;
+      box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.14);
+      position: relative;
+    }
+
+    .cardbox-slot-label {
+      font-size: 10.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #e4cfb6;
+      margin-bottom: 4px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .cardbox-active- plaque {
+      background: #f7eedc;
+      color: #231912;
+      border: 2px solid #b59772;
+      border-radius: 6px;
+      padding: 6px 12px;
+      font-family: var(--font-serif);
+      font-weight: 700;
+      font-size: 16px;
+      text-align: center;
+      box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.12);
+    }
+
+    /* Stacked Divider Tabs */
+    .tabs-stack {
+      display: flex;
+      gap: 4px;
+      padding: 0 6px;
+      margin-bottom: -10px;
+      z-index: 2;
+    }
+
+    .folder-tab {
+      background: var(--bg-card-back);
+      border: 1.5px solid var(--border-strong);
+      border-bottom: none;
+      border-radius: 8px 8px 0 0;
+      padding: 4px 10px;
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--ink-secondary);
+      cursor: pointer;
+    }
+
+    .folder-tab.active {
+      background: var(--bg-paper);
+      color: var(--accent);
+      padding-top: 6px;
+    }
+
+    /* Recipe Summary Card inside Portafichero */
+    .recipe-folio-card {
+      background: var(--bg-paper);
+      border: 2px solid var(--border-strong);
+      border-radius: 0 12px 12px 12px;
+      padding: 14px;
+      box-shadow: 0 6px 16px rgba(35, 25, 18, 0.08);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    /* En Lectura Simple el portafichero se reemplaza por lista directa (§3) */
+    .simple-list-fallback {
+      display: none;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    body.simple-mode .cardbox-visual-only {
+      display: none;
+    }
+
+    body.simple-mode .simple-list-fallback {
+      display: flex;
+    }
+
+    .card-photo-wrap {
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--border-warm);
+      background: #efe5d5;
+    }
+
+    .card-photo-wrap svg {
+      display: block;
+      width: 100%;
+      height: 150px;
+    }
+
+    .card-title {
+      margin: 0;
+      font-family: var(--font-serif);
+      font-size: calc(19px * var(--base-scale));
+      color: var(--ink-primary);
+    }
+
+    .card-desc {
+      margin: 0;
+      color: var(--ink-secondary);
+      font-size: calc(13.5px * var(--base-scale));
+    }
+
+    .card-meta-line {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding-top: 6px;
+      border-top: 1px dashed var(--border-warm);
+      font-size: 12.5px;
+      font-weight: 600;
+    }
+
+    .tag-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+
+    .tag {
+      background: var(--bg-card-back);
+      color: var(--ink-primary);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 11.5px;
+      font-weight: 600;
+      border: 1px solid var(--border-warm);
+    }
+
+    .tag.season {
+      background: var(--season-bg);
+      color: var(--season-ink);
+      border-color: rgba(35, 77, 32, 0.3);
+    }
+
+    .card-actions {
+      display: grid;
+      grid-template-columns: 1fr 1.4fr 1fr;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .btn {
+      appearance: none;
+      border: 1.5px solid var(--border-strong);
+      background: var(--bg-paper);
+      color: var(--ink-primary);
+      padding: 8px 10px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 12.5px;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #ffffff;
+      border-color: var(--accent);
+    }
+
+    .cardbox-footer-link {
+      margin-top: auto;
+      text-align: center;
+      padding: 10px;
+      border-top: 1px solid var(--border-warm);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    /* ÍNDICE Y BÚSQUEDA (§2 & §11) */
+    .mode-switch-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      background: var(--bg-card-back);
+      padding: 4px;
+      border-radius: 8px;
+      border: 1px solid var(--border-warm);
+    }
+
+    .mode-tab {
+      border: none;
+      background: transparent;
+      padding: 6px 8px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 12.5px;
+      color: var(--ink-secondary);
+      cursor: pointer;
+    }
+
+    .mode-tab[aria-selected="true"] {
+      background: var(--bg-paper);
+      color: var(--ink-primary);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .alpha-group {
+      margin-bottom: 10px;
+    }
+
+    .alpha-letter {
+      font-family: var(--font-serif);
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--accent);
+      border-bottom: 2px solid var(--border-warm);
+      padding-bottom: 2px;
+      margin-bottom: 8px;
+    }
+
+    .index-item {
+      padding: 10px;
+      background: var(--bg-paper);
+      border: 1px solid var(--border-warm);
+      border-radius: 8px;
+      margin-bottom: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .index-item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 8px;
+    }
+
+    .index-item-title {
+      font-family: var(--font-serif);
+      font-weight: 700;
+      font-size: calc(15px * var(--base-scale));
+      color: var(--ink-primary);
+      margin: 0;
+    }
+
+    .match-badge {
+      margin-top: 4px;
+      font-size: 12px;
+      background: #fff6e0;
+      color: #5c3c00;
+      border-left: 3px solid var(--accent);
+      padding: 4px 8px;
+      font-weight: 600;
+    }
+
+    /* LECTURA DE RECETA (§2, §4, §5, §9) */
+    .reading-nav-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      padding: 8px;
+      background: var(--bg-card-back);
+      border: 1px solid var(--border-warm);
+      border-radius: 8px;
+    }
+
+    .reading-nav-bar .btn {
+      padding: 5px 8px;
+      font-size: 11.5px;
+      flex: 1;
+    }
+
+    .recipe-header-title {
+      font-family: var(--font-serif);
+      font-size: calc(21px * var(--base-scale));
+      margin: 4px 0 2px;
+      color: var(--ink-primary);
+    }
+
+    .license-caption {
+      font-size: 11px;
+      color: var(--ink-muted);
+      padding: 5px 8px;
+      background: var(--bg-card-back);
+      border-top: 1px solid var(--border-warm);
+    }
+
+    .season-highlight-box {
+      background: var(--season-bg);
+      color: var(--season-ink);
+      border: 1px solid rgba(35, 77, 32, 0.35);
+      border-radius: 8px;
+      padding: 8px 10px;
+      font-size: 12.5px;
+    }
+
+    .section-subtitle {
+      font-family: var(--font-serif);
+      font-size: 15px;
+      margin: 8px 0 4px;
+      border-bottom: 1px solid var(--border-warm);
+      padding-bottom: 3px;
+    }
+
+    .ingredients-list {
+      margin: 0;
+      padding-left: 18px;
+      font-size: calc(13.5px * var(--base-scale));
+    }
+
+    .ingredients-list li {
+      margin-bottom: 4px;
+    }
+
+    .ing-kind {
+      font-size: 10.5px;
+      color: var(--ink-muted);
+      font-style: italic;
+    }
+
+    .steps-list {
+      margin: 0;
+      padding-left: 18px;
+      font-size: calc(13.5px * var(--base-scale));
+    }
+
+    .steps-list li {
+      margin-bottom: 8px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .cardbox-stage,
+      .simple-toggle {
+        transition: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="board-banner" role="banner">
+    <div>
+      <h1>Dirección 01 — Fichero Clásico de Cocina (Papel, Pestañas y Madera)</h1>
+      <p>Tradeoff: Metáfora física cálida y evidente con pestañas troqueladas y tipografía editorial serif; ocupa algo más de aire vertical que una vista compacta.</p>
+    </div>
+    <div class="board-controls">
+      <span class="pill-info">Interactivo: probá rotar fichas, buscar sin tildes o activar «Lectura simple»</span>
+    </div>
+  </header>
+
+  <main class="phones-grid" aria-label="Tres vistas principales de Recetario">
+    <!-- VISTA 1: PORTAFICHERO -->
+    <section class="phone-column" aria-label="Vista 1: Portafichero">
+      <div class="column-label">
+        <h2>1. Portafichero (Exploración)</h2>
+        <span>Título activo sobre el cajón + ficha resumen</span>
+      </div>
+      <div class="phone-frame">
+        <div class="app-header">
+          <div class="header-top-row">
+            <span class="brand-title">Recetas de Estación</span>
+            <button type="button" class="simple-toggle" aria-pressed="false" onclick="toggleSimpleMode()">
+              Lectura simple: <span class="toggle-state">No</span>
+            </button>
+          </div>
+          <div class="header-meta-row">
+            <span class="location-chip">AR · Región Pampeana · Otoño</span>
+            <span class="offline-chip">PWA Offline · 18,4 MB al día</span>
+          </div>
+          <div class="search-bar">
+            <span aria-hidden="true">🔍</span>
+            <input type="search" placeholder="Buscar plato, ingrediente o tag…" aria-label="Buscar en portafichero" oninput="syncSearch(this.value)" />
+          </div>
+          <div class="a11y-notice" role="status">
+            Lectura simple activa: sin animaciones de extracción, vista de lista y texto ampliado.
+          </div>
+        </div>
+
+        <div class="phone-body">
+          <div class="filter-row" role="group" aria-label="Filtro por estación">
+            <button type="button" class="filter-chip" aria-pressed="true">Otoño (3)</button>
+            <button type="button" class="filter-chip" aria-pressed="false">Invierno</button>
+            <button type="button" class="filter-chip" aria-pressed="false">Primavera</button>
+            <button type="button" class="filter-chip" aria-pressed="false">Verano</button>
+          </div>
+
+          <!-- Modo normal: Portafichero animado -->
+          <div id="cardboxStage" class="cardbox-stage cardbox-visual-only">
+            <!-- Dibujo del portafichero con el título activo (§2) -->
+            <div class="cardbox-drawing" aria-label="Dibujo del portafichero">
+              <div class="cardbox-slot-label">
+                <span>CAJÓN DE FICHAS · ORDEN ALFABÉTICO</span>
+                <span id="cardCounter">Ficha 2 de 3 visibles</span>
+              </div>
+              <div class="cardbox-active-plaque" id="boxActiveTitle" style="background:#f7eedc;color:#231912;border:2px solid #b59772;border-radius:6px;padding:6px 12px;font-family:var(--font-serif);font-weight:700;font-size:16px;text-align:center;">
+                Ragú Bolognesa Tradicional
+              </div>
+            </div>
+
+            <div class="tabs-stack" role="tablist" aria-label="Pestañas del fichero">
+              <button type="button" class="folder-tab" onclick="selectCard(0)">Índice</button>
+              <button type="button" class="folder-tab" onclick="selectCard(0)">L · Locro</button>
+              <button type="button" class="folder-tab active" onclick="selectCard(1)">R · Ragú</button>
+              <button type="button" class="folder-tab" onclick="selectCard(2)">T · Tarta</button>
+            </div>
+
+            <article class="recipe-folio-card" aria-live="polite">
+              <div class="card-photo-wrap">
+                <svg viewBox="0 0 400 160" role="img" aria-label="Foto de cazuela de barro con Ragú Bolognesa sobre tagliatelle">
+                  <rect width="400" height="160" fill="#e6d3b8" />
+                  <ellipse cx="200" cy="92" rx="125" ry="52" fill="#7c2d14" />
+                  <ellipse cx="200" cy="88" rx="108" ry="42" fill="#b84a24" />
+                  <circle cx="170" cy="80" r="14" fill="#d97a38" />
+                  <circle cx="225" cy="92" r="16" fill="#993215" />
+                  <path d="M185 68 C195 58, 210 62, 205 76" stroke="#3c6e31" stroke-width="5" fill="none" stroke-linecap="round" />
+                  <text x="16" y="146" fill="#3d2516" font-size="11" font-family="Georgia, serif">Foto propia · Autoría del editor · CC0</text>
+                </svg>
+              </div>
+              <h3 class="card-title" id="cardTitle">Ragú Bolognesa Tradicional</h3>
+              <p class="card-desc" id="cardDesc">Cocción lenta de carne cortada a cuchillo, soffritto de apio, zanahoria y cebolla, leche entera y tomate.</p>
+              <div class="card-meta-line">
+                <span id="cardTime">⏱ Tiempo total: 3 h 30 min</span>
+                <span>4 porciones</span>
+              </div>
+              <div class="tag-list" id="cardTags">
+                <span class="tag season">Otoño · Invierno</span>
+                <span class="tag">Pastas</span>
+                <span class="tag">Cocción lenta</span>
+              </div>
+              <div class="card-actions">
+                <button type="button" class="btn" onclick="prevCard()">← Anterior</button>
+                <button type="button" class="btn btn-primary" onclick="extractCard()">Sacar ficha</button>
+                <button type="button" class="btn" onclick="nextCard()">Siguiente →</button>
+              </div>
+            </article>
+          </div>
+
+          <!-- Modo Lectura Simple: reemplaza portafichero por lista directa (§3) -->
+          <div class="simple-list-fallback" aria-label="Navegación de lista accesible">
+            <div class="index-item">
+              <div class="index-item-header">
+                <h3 class="index-item-title">1. Locro Criollo de Zapallo Cabutia</h3>
+                <span>2 h 40 min</span>
+              </div>
+              <p class="card-desc">Guiso espeso de maíz blanco, porotos pallares y zapallo cabutia de otoño.</p>
+              <button type="button" class="btn btn-primary" onclick="selectCard(0)">Abrir receta</button>
+            </div>
+            <div class="index-item">
+              <div class="index-item-header">
+                <h3 class="index-item-title">2. Ragú Bolognesa Tradicional (Activa)</h3>
+                <span>3 h 30 min</span>
+              </div>
+              <p class="card-desc">Cocción lenta de carne cortada a cuchillo, soffritto de apio y zanahoria.</p>
+              <button type="button" class="btn btn-primary" onclick="selectCard(1)">Abrir receta</button>
+            </div>
+            <div class="index-item">
+              <div class="index-item-header">
+                <h3 class="index-item-title">3. Tarta Rústica de Manzanas</h3>
+                <span>1 h 05 min</span>
+              </div>
+              <p class="card-desc">Masa quebrada casera con manzanas rojas de cosecha otoñal y canela.</p>
+              <button type="button" class="btn btn-primary" onclick="selectCard(2)">Abrir receta</button>
+            </div>
+          </div>
+
+          <div class="cardbox-footer-link">
+            <span>Ir al Índice alfabético completo (A–Z) →</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- VISTA 2: ÍNDICE Y RESULTADOS DE BÚSQUEDA -->
+    <section class="phone-column" aria-label="Vista 2: Índice y Búsqueda">
+      <div class="column-label">
+        <h2>2. Índice tipo libro y Búsqueda</h2>
+        <span>Agrupado A–Z o coincidencias Pagefind sin foto</span>
+      </div>
+      <div class="phone-frame">
+        <div class="app-header">
+          <div class="header-top-row">
+            <span class="brand-title">Recetas de Estación</span>
+            <button type="button" class="simple-toggle" aria-pressed="false" onclick="toggleSimpleMode()">
+              Lectura simple: <span class="toggle-state">No</span>
+            </button>
+          </div>
+          <div class="header-meta-row">
+            <span class="location-chip">Filtro activo: Otoño</span>
+            <span class="offline-chip">Índice local completo</span>
+          </div>
+          <div class="search-bar">
+            <span aria-hidden="true">🔍</span>
+            <input id="middleSearchInput" type="search" value="ragu" placeholder="Probá escribir «ragu» (sin tilde) o «zapallo»…" aria-label="Término de búsqueda" oninput="syncSearch(this.value)" />
+          </div>
+        </div>
+
+        <div class="phone-body">
+          <div class="mode-switch-tabs" role="tablist">
+            <button type="button" id="tabIndexBtn" class="mode-tab" role="tab" aria-selected="false" onclick="setMiddleMode('index')">Índice del libro (A–Z)</button>
+            <button type="button" id="tabSearchBtn" class="mode-tab" role="tab" aria-selected="true" onclick="setMiddleMode('search')">Resultados («ragu»)</button>
+          </div>
+
+          <!-- Subvista A: Resultados Pagefind (§11) -->
+          <div id="searchViewBox">
+            <p style="margin:0 0 8px;font-size:12.5px;font-weight:700;color:var(--ink-secondary);">
+              2 coincidencias para «<span id="queryEcho">ragu</span>» (normalizado sin tildes · intersectado con Otoño)
+            </p>
+
+            <article class="index-item">
+              <div class="index-item-header">
+                <h3 class="index-item-title">Ragú Bolognesa Tradicional</h3>
+                <span style="font-size:12px;font-weight:600;">3 h 30 min</span>
+              </div>
+              <p class="card-desc">Cocción lenta de carne cortada a cuchillo, soffritto de apio, zanahoria y cebolla.</p>
+              <div class="tag-list">
+                <span class="tag season">Otoño · Invierno</span>
+                <span class="tag">Pastas</span>
+              </div>
+              <div class="match-badge">
+                Coincide en: título — «Ragú Bolognesa Tradicional»
+              </div>
+            </article>
+
+            <article class="index-item">
+              <div class="index-item-header">
+                <h3 class="index-item-title">Lasaña de Berenjenas y Ragú de Hongos</h3>
+                <span style="font-size:12px;font-weight:600;">1 h 25 min</span>
+              </div>
+              <p class="card-desc">Capas de pasta fresca con hongos de pino secos e hidratados en caldo casero.</p>
+              <div class="tag-list">
+                <span class="tag season">Otoño</span>
+                <span class="tag">Horno</span>
+              </div>
+              <div class="match-badge">
+                Coincide en: ingredientes — «hongos secos para el ragú»
+              </div>
+            </article>
+          </div>
+
+          <!-- Subvista B: Índice Alfabético tipo libro (§2) -->
+          <div id="alphaViewBox" style="display:none;">
+            <div class="alpha-group">
+              <div class="alpha-letter">L</div>
+              <article class="index-item">
+                <div class="index-item-header">
+                  <h3 class="index-item-title">Locro Criollo de Zapallo Cabutia</h3>
+                  <span style="font-size:12px;">2 h 40 min</span>
+                </div>
+                <p class="card-desc">Guiso tradicional de maíz blanco pisado y zapallo de estación.</p>
+                <div class="tag-list">
+                  <span class="tag season">Otoño · Invierno</span>
+                  <span class="tag">Guisos</span>
+                </div>
+              </article>
+            </div>
+
+            <div class="alpha-group">
+              <div class="alpha-letter">R</div>
+              <article class="index-item">
+                <div class="index-item-header">
+                  <h3 class="index-item-title">Ragú Bolognesa Tradicional</h3>
+                  <span style="font-size:12px;">3 h 30 min</span>
+                </div>
+                <p class="card-desc">Salsa clásica de cocción lenta con soffritto de huerta.</p>
+                <div class="tag-list">
+                  <span class="tag season">Otoño · Invierno</span>
+                  <span class="tag">Pastas</span>
+                </div>
+              </article>
+            </div>
+
+            <div class="alpha-group">
+              <div class="alpha-letter">T</div>
+              <article class="index-item">
+                <div class="index-item-header">
+                  <h3 class="index-item-title">Tarta Rústica de Manzanas</h3>
+                  <span style="font-size:12px;">1 h 05 min</span>
+                </div>
+                <p class="card-desc">Masa quebrada de manteca con manzanas criollas y nuez.</p>
+                <div class="tag-list">
+                  <span class="tag season">Otoño</span>
+                  <span class="tag">Dulces</span>
+                </div>
+              </article>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- VISTA 3: LECTURA DE RECETA ABIERTA -->
+    <section class="phone-column" aria-label="Vista 3: Receta abierta">
+      <div class="column-label">
+        <h2>3. Receta abierta (Lectura)</h2>
+        <span>Foto tras el título + navegación de visibles</span>
+      </div>
+      <div class="phone-frame">
+        <div class="app-header">
+          <div class="header-top-row">
+            <span class="brand-title">Recetas de Estación</span>
+            <button type="button" class="simple-toggle" aria-pressed="false" onclick="toggleSimpleMode()">
+              Lectura simple: <span class="toggle-state">No</span>
+            </button>
+          </div>
+          <!-- Controles permanentes en lectura (§2) -->
+          <nav class="reading-nav-bar" aria-label="Navegación dentro de la lectura">
+            <button type="button" class="btn" onclick="prevCard()">← Anterior</button>
+            <button type="button" class="btn" onclick="nextCard()">Siguiente →</button>
+            <button type="button" class="btn" onclick="setMiddleMode('index')">Índice</button>
+            <button type="button" class="btn btn-primary" onclick="returnToBox()">Portafichero</button>
+          </nav>
+        </div>
+
+        <div class="phone-body">
+          <!-- 1. Título -->
+          <h2 class="recipe-header-title" id="readingTitle">Ragú Bolognesa Tradicional</h2>
+          <div style="font-size:12px;color:var(--ink-secondary);">
+            Prep: 30 min · Cocción: 3 h · Total: <strong>3 h 30 min</strong> · 4 porciones · Media
+          </div>
+
+          <!-- 2. Foto obligatoria después del título con licencia (§5) -->
+          <figure class="card-photo-wrap" style="margin:0;">
+            <svg viewBox="0 0 400 145" role="img" aria-label="Plato terminado de Ragú Bolognesa con tagliatelle al huevo">
+              <rect width="400" height="145" fill="#e6d3b8" />
+              <ellipse cx="200" cy="76" rx="135" ry="48" fill="#fdfaf3" stroke="#b59772" stroke-width="3" />
+              <ellipse cx="200" cy="76" rx="95" ry="34" fill="#d9a14e" />
+              <ellipse cx="200" cy="74" rx="62" ry="22" fill="#8f3418" />
+              <circle cx="195" cy="70" r="6" fill="#3c6e31" />
+            </svg>
+            <figcaption class="license-caption">
+              Foto propia · Autor: A. Aleka · Licencia: Dominio público (CC0) · Sin IA
+            </figcaption>
+          </figure>
+
+          <!-- 3. Vínculo explícito al catálogo de productos de estación (§9) -->
+          <div class="season-highlight-box">
+            <strong>En estación ahora (AR · Pampeana · Otoño):</strong> Apio de penca y Zanahoria criolla (vínculo explícito al catálogo estacional).
+          </div>
+
+          <!-- 4. Ingredientes híbridos (§4) -->
+          <h3 class="section-subtitle">Ingredientes (4 porciones)</h3>
+          <ul class="ingredients-list">
+            <li><strong>400 g</strong> carne vacuna (roast beef), <em>cortada a cuchillo</em> <span class="ing-kind">[estructurado]</span></li>
+            <li><strong>150 g</strong> panceta salada, <em>picada fina</em> <span class="ing-kind">[estructurado]</span></li>
+            <li><strong>1 unidad</strong> tallo de apio y <strong>1 unidad</strong> zanahoria <span class="ing-kind">[estructurado]</span></li>
+            <li><strong>200 ml</strong> leche entera tibia <span class="ing-kind">[estructurado]</span></li>
+            <li>Sal gruesa, pimienta negra recién molida y nuez moscada a gusto <span class="ing-kind">[texto libre]</span></li>
+          </ul>
+
+          <!-- 5. Pasos numerados (§4) -->
+          <h3 class="section-subtitle">Pasos de preparación</h3>
+          <ol class="steps-list">
+            <li>Fundir la panceta a fuego suave en olla de fondo grueso y sumar el soffritto de apio, zanahoria y cebolla bien pequeño.</li>
+            <li>Incorporar la carne cortada a cuchillo, dorar a fuego vivo y desglasar con vino blanco seco hasta evaporar el alcohol.</li>
+            <li>Sumar el tomate triturado y cocinar tapado al mínimo durante 2 horas y media, agregando la leche tibia hacia el final.</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const cards = [
+      {
+        title: "Locro Criollo de Zapallo Cabutia",
+        desc: "Guiso espeso de maíz blanco pisado, porotos pallares y zapallo cabutia de cosecha otoñal.",
+        time: "⏱ Tiempo total: 2 h 40 min",
+        tags: ["Otoño · Invierno", "Guisos", "Olla"]
+      },
+      {
+        title: "Ragú Bolognesa Tradicional",
+        desc: "Cocción lenta de carne cortada a cuchillo, soffritto de apio, zanahoria y cebolla, leche entera y tomate.",
+        time: "⏱ Tiempo total: 3 h 30 min",
+        tags: ["Otoño · Invierno", "Pastas", "Cocción lenta"]
+      },
+      {
+        title: "Tarta Rústica de Manzanas",
+        desc: "Masa quebrada casera con manzanas criollas de otoño, nueces tostadas y canela en rama.",
+        time: "⏱ Tiempo total: 1 h 05 min",
+        tags: ["Otoño", "Horno", "Dulces"]
+      }
+    ];
+
+    let activeIdx = 1;
+    let isSimple = false;
+
+    function renderActiveCard() {
+      const item = cards[activeIdx];
+      document.getElementById("boxActiveTitle").textContent = item.title;
+      document.getElementById("cardTitle").textContent = item.title;
+      document.getElementById("cardDesc").textContent = item.desc;
+      document.getElementById("cardTime").textContent = item.time;
+      document.getElementById("readingTitle").textContent = item.title;
+      document.getElementById("cardCounter").textContent = `Ficha ${activeIdx + 1} de ${cards.length} visibles`;
+    }
+
+    function selectCard(idx) {
+      activeIdx = idx;
+      renderActiveCard();
+    }
+
+    function prevCard() {
+      activeIdx = (activeIdx - 1 + cards.length) % cards.length;
+      renderActiveCard();
+    }
+
+    function nextCard() {
+      activeIdx = (activeIdx + 1) % cards.length;
+      renderActiveCard();
+    }
+
+    function extractCard() {
+      const stage = document.getElementById("cardboxStage");
+      stage.classList.add("extracting");
+      setTimeout(() => {
+        stage.classList.remove("extracting");
+      }, 360);
+    }
+
+    function returnToBox() {
+      renderActiveCard();
+      extractCard();
+    }
+
+    function toggleSimpleMode() {
+      isSimple = !isSimple;
+      document.body.classList.toggle("simple-mode", isSimple);
+      document.querySelectorAll(".simple-toggle").forEach((btn) => {
+        btn.setAttribute("aria-pressed", String(isSimple));
+        const stateSpan = btn.querySelector(".toggle-state");
+        if (stateSpan) stateSpan.textContent = isSimple ? "Sí" : "No";
+      });
+    }
+
+    function setMiddleMode(mode) {
+      const isSearch = mode === "search";
+      document.getElementById("searchViewBox").style.display = isSearch ? "block" : "none";
+      document.getElementById("alphaViewBox").style.display = isSearch ? "none" : "block";
+      document.getElementById("tabSearchBtn").setAttribute("aria-selected", String(isSearch));
+      document.getElementById("tabIndexBtn").setAttribute("aria-selected", String(!isSearch));
+    }
+
+    function syncSearch(val) {
+      const clean = (val || "ragu").trim();
+      document.getElementById("queryEcho").textContent = clean;
+      setMiddleMode("search");
+    }
+  </script>
+</body>
+</html>

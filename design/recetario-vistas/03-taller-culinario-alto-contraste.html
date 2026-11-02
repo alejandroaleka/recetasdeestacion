@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>03 — Mesada de Trabajo (Ficha Técnica de Cocina)</title>
+  <style>
+    :root {
+      --bg-canvas: #eceeef;
+      --bg-paper: #ffffff;
+      --bg-panel: #f4f6f8;
+      --ink-primary: #11161c;
+      --ink-secondary: #36414d;
+      --ink-muted: #556270;
+      --accent: #b83314;
+      --accent-bg: #fcebe6;
+      --border-line: #b8c2cc;
+      --border-heavy: #11161c;
+      --focus-ring: #0044cc;
+      --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-mono: ui-monospace, 'Cascadia Code', 'Segoe UI Mono', monospace;
+      --scale: 1;
+    }
+
+    body.simple-mode {
+      --bg-canvas: #ffffff;
+      --bg-panel: #eeeeee;
+      --scale: 1.14;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 24px;
+      background: var(--bg-canvas);
+      color: var(--ink-primary);
+      font-family: var(--font-sans);
+      font-size: calc(15px * var(--scale));
+      line-height: 1.5;
+    }
+
+    .board-banner {
+      max-width: 1380px;
+      margin: 0 auto 20px;
+      padding: 16px 22px;
+      background: var(--bg-paper);
+      border: 2px solid var(--border-heavy);
+      border-radius: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .board-banner h1 {
+      margin: 0 0 4px;
+      font-size: 20px;
+    }
+
+    .board-banner p {
+      margin: 0;
+      font-size: 13.5px;
+      color: var(--ink-secondary);
+    }
+
+    .phones-grid {
+      max-width: 1380px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      align-items: start;
+    }
+
+    .phone-column {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .column-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+
+    .column-label h2 {
+      margin: 0;
+      font-size: 15px;
+    }
+
+    .column-label span {
+      font-size: 12px;
+      color: var(--ink-secondary);
+    }
+
+    .phone-frame {
+      background: var(--bg-paper);
+      border: 3px solid var(--border-heavy);
+      border-radius: 16px;
+      overflow: hidden;
+      min-height: 780px;
+      max-height: 780px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 6px 6px 0 rgba(17, 22, 28, 0.14);
+    }
+
+    /* Cabecera fija con botones táctiles grandes */
+    .app-header {
+      position: sticky;
+      top: 0;
+      z-index: 15;
+      background: var(--bg-paper);
+      border-bottom: 3px solid var(--border-heavy);
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .title-mark {
+      font-weight: 900;
+      font-size: 15px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .simple-toggle {
+      appearance: none;
+      background: var(--bg-panel);
+      color: var(--ink-primary);
+      border: 2px solid var(--border-heavy);
+      border-radius: 4px;
+      padding: 6px 10px;
+      font-weight: 800;
+      font-size: 12.5px;
+      cursor: pointer;
+    }
+
+    .simple-toggle[aria-pressed="true"] {
+      background: var(--ink-primary);
+      color: #ffffff;
+    }
+
+    .simple-toggle:focus-visible,
+    button:focus-visible,
+    input:focus-visible {
+      outline: 3px solid var(--focus-ring);
+      outline-offset: 2px;
+    }
+
+    .phone-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    /* Ficha técnica en el portafichero */
+    .tech-drawer {
+      border: 2px solid var(--border-heavy);
+      background: var(--bg-panel);
+      padding: 10px;
+      border-radius: 6px;
+    }
+
+    .drawer-title-window {
+      background: var(--ink-primary);
+      color: #ffffff;
+      padding: 8px 10px;
+      font-family: var(--font-mono);
+      font-size: 14px;
+      font-weight: 700;
+      border-radius: 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .spec-card {
+      border: 2px solid var(--border-heavy);
+      border-radius: 6px;
+      padding: 12px;
+      background: var(--bg-paper);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .touch-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.3fr 1fr;
+      gap: 8px;
+    }
+
+    .btn-touch {
+      border: 2px solid var(--border-heavy);
+      background: var(--bg-panel);
+      color: var(--ink-primary);
+      padding: 10px 8px;
+      font-weight: 800;
+      font-size: 12.5px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .btn-touch.primary {
+      background: var(--accent);
+      color: #ffffff;
+      border-color: var(--border-heavy);
+    }
+
+    .table-ing {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: calc(13px * var(--scale));
+    }
+
+    .table-ing th,
+    .table-ing td {
+      border-bottom: 1px solid var(--border-line);
+      padding: 6px 4px;
+      text-align: left;
+    }
+
+    .table-ing td:first-child {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      white-space: nowrap;
+      width: 34%;
+    }
+
+    .sync-banner {
+      background: var(--accent-bg);
+      border: 1.5px solid var(--accent);
+      padding: 8px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+  </style>
+</head>
+<body>
+  <header class="board-banner" role="banner">
+    <div>
+      <h1>Dirección 03 — Mesada de Trabajo (Ficha Técnica de Alto Contraste)</h1>
+      <p>Tradeoff: Pensada para leer a distancia con las manos en la masa (botones grandes, tabla de cantidades tabulares y contraste máximo); menos cálida y decorativa.</p>
+    </div>
+    <div>
+      <button type="button" class="btn-touch primary" onclick="toggleSimpleMode()">Conmutar «Lectura simple: Sí / No»</button>
+    </div>
+  </header>
+
+  <main class="phones-grid" aria-label="Tres vistas principales en dirección Mesada de Trabajo">
+    <!-- 1. PORTAFICHERO TÉCNICO -->
+    <section class="phone-column" aria-label="Portafichero Técnico">
+      <div class="column-label">
+        <h2>1. Portafichero de Mesada</h2>
+        <span>Controles táctiles grandes (48 px)</span>
+      </div>
+      <div class="phone-frame">
+        <div class="app-header">
+          <div class="top-bar">
+            <span class="title-mark">RECETARIO · FICHERO</span>
+            <button type="button" class="simple-toggle" aria-pressed="false" onclick="toggleSimpleMode()">
+              Lectura simple: <span class="st">No</span>
+            </button>
+          </div>
+          <input type="search" style="padding:7px 10px;border:2px solid var(--border-heavy);border-radius:4px;font-size:13px;" placeholder="Buscar receta o ingrediente…" aria-label="Buscar receta" />
+        </div>
+
+        <div class="phone-body">
+          <!-- Sincronización diferencial (§7) -->
+          <div class="sync-banner">
+            <span><strong>PWA Offline activa.</strong> 2 recetas nuevas (+420 KB delta).</span>
+            <button type="button" class="btn-touch" style="padding:4px 8px;font-size:11.5px;">Sincronizar</button>
+          </div>
+
+          <div class="tech-drawer">
+            <div style="font-size:11px;font-weight:800;margin-bottom:4px;color:var(--ink-secondary);">
+              FICHERO ACTUAL (SOBRE EL DIBUJO DEL CAJÓN):
+            </div>
+            <div class="drawer-title-window">
+              <span>[R] RAGÚ BOLOGNESA</span>
+              <span>02 / 03</span>
+            </div>
+          </div>
+
+          <article class="spec-card">
+            <svg viewBox="0 0 360 135" style="width:100%;height:135px;border:2px solid var(--border-heavy);border-radius:4px;" role="img" aria-label="Foto del plato Ragú Bolognesa">
+              <rect width="360" height="135" fill="#dfe4e8" />
+              <rect x="40" y="22" width="280" height="90" rx="12" fill="#ffffff" stroke="#11161c" stroke-width="3" />
+              <circle cx="180" cy="67" r="34" fill="#b83314" />
+            </svg>
+            <h3 style="margin:0;font-size:18px;">Ragú Bolognesa Tradicional</h3>
+            <p style="margin:0;font-size:13px;color:var(--ink-secondary);">
+              Salsa de carne cortada a cuchillo y vegetales de estación en cocción prolongada.
+            </p>
+            <div style="font-family:var(--font-mono);font-size:12px;background:var(--bg-panel);padding:6px 8px;border:1px solid var(--border-line);">
+              TOTAL: 03h 30m | ESTACIÓN: OTOÑO/INV | TAGS: PASTAS, OLLA
+            </div>
+            <div class="touch-grid">
+              <button type="button" class="btn-touch">← ANTERIOR</button>
+              <button type="button" class="btn-touch primary">ABRIR FICHA</button>
+              <button type="button" class="btn-touch">SIGUIENTE →</button>
+            </div>
+          </article>
+
+          <button type="button" class="btn-touch" style="margin-top:auto;width:100%;">
+            ABRIR ÍNDICE DE LIBRO (A–Z) →
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. ÍNDICE Y BÚSQUEDA -->
+    <section class="phone-column" aria-label="Índice y Búsqueda Técnica">
+      <div class="column-label">
+        <h2>2. Índice y Búsqueda</h2>
+        <span>Tabla densa sin fotos</span>
+      </div>
+      <div class="phone-frame">
+        <div class="app-header">
+          <div class="top-bar">
+            <span class="title-mark">ÍNDICE / BUSCADOR</span>
+            <button type="button" class="simple-toggle" aria-pressed="false" onclick="toggleSimpleMode()">
+              Lectura simple: <span class="st">No</span>
+            </button>
+          </div>
+          <input type="search" value="pure" style="padding:7px 10px;border:2px solid var(--border-heavy);border-radius:4px;font-size:13px;" aria-label="Consulta sin tilde" />
+        </div>
+
+        <div class="phone-body">
+          <div style="font-family:var(--font-mono);font-size:12px;font-weight:700;">
+            1 RESULTADO PARA «pure» (encuentra «puré» sin tilde)
+          </div>
+
+          <article class="spec-card">
+            <div style="display:flex;justify-content:space-between;align-items:baseline;">
+              <h3 style="margin:0;font-size:16px;">Puré Rústico de Zapallo Asado</h3>
+              <span style="font-family:var(--font-mono);font-size:12px;font-weight:700;">45m</span>
+            </div>
+            <p style="margin:0;font-size:13px;color:var(--ink-secondary);">
+              Zapallo cabutia horneado con cáscara, pisado con aceite de oliva y salvia fresca.
+            </p>
+            <div style="font-size:12px;font-weight:700;background:var(--accent-bg);color:var(--accent);padding:5px 8px;border-left:4px solid var(--accent);">
+              Coincide en: título — «Puré Rústico de Zapallo Asado»
+            </div>
+          </article>
+
+          <div style="font-family:var(--font-mono);font-size:12px;font-weight:700;margin-top:8px;">
+            ÍNDICE GENERAL POR LETRA (FILTRO: OTOÑO)
+          </div>
+
+          <div class="spec-card" style="gap:6px;">
+            <div><strong>[L]</strong> Locro Criollo de Zapallo — <span style="font-family:var(--font-mono);">2h 40m</span></div>
+            <hr style="width:100%;border:none;border-top:1px solid var(--border-line);" />
+            <div><strong>[P]</strong> Puré Rústico de Zapallo Asado — <span style="font-family:var(--font-mono);">45m</span></div>
+            <hr style="width:100%;border:none;border-top:1px solid var(--border-line);" />
+            <div><strong>[R]</strong> Ragú Bolognesa Tradicional — <span style="font-family:var(--font-mono);">3h 30m</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. LECTURA DE RECETA -->
+    <section class="phone-column" aria-label="Lectura Técnica">
+      <div class="column-label">
+        <h2>3. Ficha abierta en mesada</h2>
+        <span>Cantidades tabulares + barra fija</span>
+      </div>
+      <div class="phone-frame">
+        <div class="app-header">
+          <div class="top-bar">
+            <span class="title-mark">LECTURA DE FICHA</span>
+            <button type="button" class="simple-toggle" aria-pressed="false" onclick="toggleSimpleMode()">
+              Lectura simple: <span class="st">No</span>
+            </button>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:4px;">
+            <button type="button" class="btn-touch" style="padding:6px 4px;font-size:11px;">← ANT</button>
+            <button type="button" class="btn-touch" style="padding:6px 4px;font-size:11px;">SIG →</button>
+            <button type="button" class="btn-touch" style="padding:6px 4px;font-size:11px;">ÍNDICE</button>
+            <button type="button" class="btn-touch primary" style="padding:6px 4px;font-size:11px;">CAJÓN</button>
+          </div>
+        </div>
+
+        <div class="phone-body">
+          <h2 style="margin:0;font-size:19px;">Puré Rústico de Zapallo Asado</h2>
+
+          <!-- Foto obligatoria tras el título (§5) -->
+          <figure style="margin:0;border:2px solid var(--border-heavy);border-radius:4px;overflow:hidden;">
+            <svg viewBox="0 0 360 115" style="width:100%;height:115px;display:block;" role="img" aria-label="Fuente con puré rústico de zapallo y hojas de salvia">
+              <rect width="360" height="115" fill="#f3e8d2" />
+              <ellipse cx="180" cy="60" rx="110" ry="38" fill="#d97218" />
+              <path d="M160 55 L195 50" stroke="#2c5e2e" stroke-width="6" stroke-linecap="round" />
+            </svg>
+            <figcaption style="font-family:var(--font-mono);font-size:10.5px;padding:4px 6px;background:var(--bg-panel);">
+              AUTORÍA PROPIA · CC0 · SIN IA
+            </figcaption>
+          </figure>
+
+          <!-- Tabla de ingredientes híbrida (§4) -->
+          <table class="table-ing" aria-label="Ingredientes">
+            <thead>
+              <tr>
+                <th>Medida</th>
+                <th>Ingrediente / Nota</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1.2 kg</td>
+                <td>Zapallo cabutia <strong>(en estación · Otoño)</strong></td>
+              </tr>
+              <tr>
+                <td>45 ml</td>
+                <td>Aceite de oliva virgen extra</td>
+              </tr>
+              <tr>
+                <td>6 hojas</td>
+                <td>Salvia fresca, entera</td>
+              </tr>
+              <tr>
+                <td>Texto libre</td>
+                <td>Sal marina y pimienta negra recién molida a gusto</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div>
+            <strong style="font-size:13.5px;display:block;margin-bottom:4px;">PASOS NUMERADOS:</strong>
+            <ol style="margin:0;padding-left:18px;font-size:13px;">
+              <li>Cortar el zapallo al medio, retirar semillas y hornear boca abajo a 200 °C durante 40 minutos.</li>
+              <li>Ahuecar la pulpa tibia, pisar con tenedor junto al aceite de oliva infusionado con salvia.</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    let simple = false;
+    function toggleSimpleMode() {
+      simple = !simple;
+      document.body.classList.toggle("simple-mode", simple);
+      document.querySelectorAll(".simple-toggle").forEach((b) => {
+        b.setAttribute("aria-pressed", String(simple));
+        const sp = b.querySelector(".st");
+        if (sp) sp.textContent = simple ? "Sí" : "No";
+      });
+    }
+  </script>
+</body>
+</html>

@@ -85,6 +85,33 @@ Los filtros excluyen de la vista las recetas que no cumplen el criterio, por lo 
 Existe **una sola receta activa**, compartida entre lectura y portafichero. Si se abre A y
 desde la lectura se avanza hasta C, al volver al portafichero queda activa **C**.
 
+### Dirección visual y boceto de referencia
+
+**Acordado:** se adopta la **Dirección 01 — Fichero Clásico de Cocina (Papel y Madera)**
+(`design/recetario-vistas/01-fichero-clasico-editorial.html`) como especificación visual de las
+tres vistas principales:
+
+- **Estética y tipografía:** metáfora física cálida de cajón de madera y fichas de cartulina
+  crema con pestañas superiores troqueladas escalonadas, tipografía serif editorial (`Georgia`)
+  para títulos y sans limpia para metadatos y controles. Tradeoff asumido: prioriza la calidez
+  doméstica y la claridad de la metáfora física aunque ocupe algo más de aire vertical.
+- **Vista 1 (Portafichero):** placa sobre el dibujo del cajón con el título de la ficha activa,
+  pestañas superiores (`Índice` y letras/fichas), tarjeta de resumen con foto, descripción breve,
+  tiempo total, porciones, tags y botones `← Anterior`, `Sacar ficha` y `Siguiente →`, más enlace
+  al pie hacia el índice alfabético completo.
+- **Vista 2 (Índice y Búsqueda):** conmutación entre el Índice tipo libro agrupado de la `A` a la
+  `Z` y la lista de resultados de Pagefind sin fotos, encabezada por el conteo de coincidencias y
+  mostrando el campo que coincidió (`Coincide en: título / ingredientes — «...»`).
+- **Vista 3 (Receta abierta):** barra de navegación de lectura en la cabecera (`← Anterior`,
+  `Siguiente →`, `Índice`, `Portafichero`), título del plato, foto principal obligatoria con pie
+  de autoría y licencia inmediatamente debajo del título, recuadro de productos en estación según
+  el catálogo curado, lista de ingredientes híbridos y pasos numerados.
+- **Comportamiento con «Lectura simple: Sí»:** el interruptor de la cabecera superior fija
+  reemplaza el portafichero animado por la lista directa, desactiva las transiciones de
+  extracción, amplía el cuerpo tipográfico y refuerza el contraste y los bordes. Las direcciones
+  `02-botanico-estacional.html` y `03-taller-culinario-alto-contraste.html` quedan archivadas
+  como alternativas descartadas.
+
 ---
 
 ## 3. Accesibilidad
@@ -105,13 +132,21 @@ del estado offline.
 Efectos del modo: sin rotación ni animación de extracción, navegación de lista, controles
 explícitos, foco visible y texto ampliado.
 
-> Pendiente: rótulos exactos del control y su ubicación en pantalla.
+### Ubicación y rótulo del interruptor
+
+- **Ubicación:** en la **cabecera superior fija**, siempre visible tanto en el portafichero como
+  en el índice y en la lectura de una receta, junto al buscador y al selector de ubicación, sin
+  perderse al desplazar la página.
+- **Rótulo:** interruptor con la etiqueta **«Lectura simple»** y estado visible **«Sí / No»**
+  (`aria-pressed="true|false"`). Cuando se activa automáticamente por las preferencias del
+  dispositivo, se informa de manera discreta que la lectura simple quedó activa y que puede
+  cambiarse desde ese mismo control.
 
 ---
 
 ## 4. Modelo de contenido
 
-**Estado: Acordado** — estructura de archivos y campos, salvo lo marcado como pendiente.
+**Estado: Acordado**
 
 El contenido son **archivos versionados**, no una base de datos. Una carpeta por receta:
 
@@ -173,6 +208,23 @@ Consecuencia asumida: una receta publicada que luego quede incompleta desaparece
 error fatal, por lo que el informe de build es el único aviso. Las copias ya guardadas en
 navegadores de lectores permanecen en el dispositivo hasta la próxima sincronización.
 
+### Formato del informe de build y aviso editorial
+
+**Acordado:**
+
+- **En Keystatic (`description` de cada campo obligatorio):** como el formulario debe permitir
+  guardar borradores incompletos sin bloquear el guardado, cada campo requerido para publicar
+  (Título, Imagen principal con origen/autor/licencia/texto alternativo, Ingredientes, Pasos y
+  Estado) muestra un aviso fijo indicando que es obligatorio para publicar y que, si queda
+  vacío, la receta se guarda igual pero se omite del sitio público.
+- **Banner de alerta en desarrollo (`astro dev`):** cuando existe alguna receta con
+  `estado: publicada` que está siendo omitida por faltarle un dato obligatorio, la vista local de
+  desarrollo muestra un banner de advertencia con el `slug` de la receta y los campos faltantes.
+- **Informe al finalizar `astro build`:** imprime una tabla resumen en la consola (cantidad de
+  recetas publicadas, en borrador y omitidas por incompletas, detallando `slug` y campos
+  faltantes) y escribe un reporte estructurado local en `.astro/build-report.json` (excluido del
+  paquete publicado).
+
 ---
 
 ## 5. Imágenes
@@ -189,7 +241,12 @@ navegadores de lectores permanecen en el dispositivo hasta la próxima sincroniz
 El dato de licencia es declarativo: registra la afirmación del administrador, no la verifica.
 Es un control de proceso, no de seguridad.
 
-**Propuesto:** limitar formatos, no admitir SVG sin sanear y validar tamaño en build.
+**Acordado (validación técnica en build):**
+
+- **Formatos admitidos:** solo formatos de mapa de bits web (`WebP`, `AVIF`, `JPEG`, `PNG`); no se
+  admiten archivos `SVG` sin sanear como fotos de recetas.
+- **Control de tamaño:** el build valida el peso máximo por imagen y sirve las copias optimizadas
+  que integran el paquete offline.
 
 ---
 
@@ -226,6 +283,16 @@ texto, sitios, videos o libros.
 
 Consecuencia: el volumen del catálogo depende de la carga manual del administrador, y no hace
 falta definir formato de entrada, prompts ni reglas de confirmación humana.
+
+### Alojamiento y publicación
+
+**Acordado:** el sitio estático se publica en **Cloudflare Pages (Plan Free)** conectado al
+repositorio de GitHub:
+
+- **Ancho de banda ilimitado en el plan gratuito**, adecuado para absorber la descarga del
+  paquete offline completo con todas las imágenes optimizadas.
+- **Control de cabeceras HTTP mediante `_headers`**, para servir `offline-manifest.json` y el
+  service worker con `Cache-Control: no-cache` y los activos versionados con caché largo.
 
 ---
 
@@ -335,7 +402,7 @@ No se guardan coordenadas, no se envían a terceros y no se hace seguimiento.
 
 ## 9. Estacionalidad
 
-**Estado: Acordado** el modelo; **Pendiente** la carga inicial de la tabla curada.
+**Estado: Acordado**
 
 Existe un filtro por **Primavera, Verano, Otoño e Invierno** para platos que usan productos de
 estación, además de tags y búsqueda directa.
@@ -364,7 +431,14 @@ El modelo combina dos niveles complementarios:
   indicó el país sin subregión), **se muestra explícitamente la incertidumbre en lugar de
   inventar el dato**, y queda disponible el filtro manual por las cuatro estaciones.
 
-**Pendiente:** listado inicial de países, subregiones climáticas y productos de estación a cargar.
+### Alcance inicial de la tabla curada
+
+- **País y subregiones iniciales:** **Argentina**, dividida en cinco subregiones climáticas
+  curadas (`Pampeana`, `Cuyo`, `Noroeste (NOA)`, `Noreste (NEA)` y `Patagonia`), dejando el
+  esquema preparado para incorporar otros países más adelante.
+- **Conjunto base de productos de estación:** una docena inicial de productos frescos de
+  referencia (zapallo cabutia/anco, tomate, membrillo, manzana, choclo, alcaucil, cítricos,
+  frutilla, espinaca, berenjena, higo y puerro).
 
 ---
 
@@ -527,12 +601,13 @@ inspiración y no son material autorizado para reutilizar.
 
 ---
 
-## 13. Pendientes agrupados
+## 13. Pendientes agrupados (para verificar en la implementación)
 
-| Área | Qué falta |
+Cerradas las definiciones de producto, quedan únicamente las verificaciones y detalles propios de
+la puesta en marcha:
+
+| Área | Qué falta verificar o detallar al implementar |
 |---|---|
-| Diseño | Bocetos de portafichero, índice y lectura |
-| Accesibilidad | Rótulos y ubicación del interruptor de modo accesible |
-| Seguridad | Verificar el bloqueo del panel en producción |
-| Contenido | Formato del informe de build, aviso en el panel y carga inicial de la tabla estacional |
-| Publicación | Alojamiento |
+| Seguridad | Verificar que `/keystatic` y `/api/keystatic` queden bloqueados y ausentes en el build de producción |
+| Búsqueda | Verificar las 3 comprobaciones técnicas de Pagefind y normalización listadas en §11 |
+| Herramientas internas | Detallar los escenarios concretos del simulador interno de desarrollo (§10) |
