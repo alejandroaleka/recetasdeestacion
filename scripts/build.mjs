@@ -23,6 +23,7 @@ import {
 import { loadSeasonalityCatalog } from '../src/lib/seasonality.mjs';
 import { assertNoKeystaticInDist } from '../src/lib/keystatic-guard.mjs';
 import { buildPagefindIndex } from '../src/lib/search.mjs';
+import { generateOfflineManifest } from '../src/lib/offline.mjs';
 import {
   renderPortaficheroPage,
   renderIndicePage,
@@ -32,6 +33,79 @@ import {
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '..');
 const DEFAULT_RECIPES_DIR = path.resolve(ROOT, 'src/content/recetas');
+const PUBLIC_DIR = path.resolve(ROOT, 'public');
+
+/**
+ * Minimal Service Worker shell for the all-or-nothing offline package.
+ *
+ * The worker never hardcodes a version: on install it fetches
+ * `offline-manifest.json` (served with `Cache-Control: no-cache` via
+ * `public/_headers`), precaches every listed resource, and serves them
+ * cache-first on later visits. A new manifest version atomically
+ * replaces the previous `recetario-offline-*` cache on activate.
+ */
+const SERVICE_WORKER_SOURCE = `/* Recetario offline shell (T5, S6). Versioned via offline-manifest.json. */
+const MANIFEST_URL = 'offline-manifest.json';
+const ACTIVE_PREFIX = 'recetario-offline-';
+
+async function loadManifest() {
+  const response = await fetch(MANIFEST_URL, { cache: 'no-store' });
+  if (!response.ok) throw new Error('No se pudo leer offline-manifest.json');
+  return response.json();
+}
+
+self.addEventListener('install', (event) => {
+  event.waitUntil(
+    (async () => {
+      const manifest = await loadManifest();
+      const cache = await caches.open(ACTIVE_PREFIX + manifest.versionHash);
+      await cache.addAll(manifest.resources.map((item) => item.path));
+      await self.skipWaiting();
+    })()
+  );
+});
+
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
+    (async () => {
+      let current = null;
+      try {
+        const manifest = await loadManifest();
+        current = ACTIVE_PREFIX + manifest.versionHash;
+      } catch {
+        current = null;
+      }
+      const names = await caches.keys();
+      await Promise.all(
+        names
+          .filter((name) => name.startsWith(ACTIVE_PREFIX) && name !== current)
+          .map((name) => caches.delete(name))
+      );
+      await self.clients.claim();
+    })()
+  );
+});
+
+self.addEventListener('fetch', (event) => {
+  if (event.request.method !== 'GET') return;
+  event.respondWith(
+    (async () => {
+      const cached = await caches.match(event.request);
+      if (cached) return cached;
+      return fetch(event.request);
+    })()
+  );
+});
+`;
+
+function copyPublicAsset(filename, outDir) {
+  const source = path.join(PUBLIC_DIR, filename);
+  if (!fs.existsSync(source)) return null;
+  const target = path.join(outDir, filename);
+  fs.mkdirSync(path.dirname(target), { recursive: true });
+  fs.copyFileSync(source, target);
+  return target;
+}
 
 function ingredientNames(recipe) {
   if (!Array.isArray(recipe.ingredientes)) return [];
@@ -142,9 +216,15 @@ export async function buildSite(options = {}) {
 
   const pagefind = buildPagefindIndex(outDir);
 
+  copyPublicAsset('_headers', outDir);
+  copyPublicAsset('manifest.webmanifest', outDir);
+  fs.writeFileSync(path.join(outDir, 'sw.js'), SERVICE_WORKER_SOURCE, 'utf8');
+
+  const offlineManifest = generateOfflineManifest(outDir);
+
   const guard = assertNoKeystaticInDist(outDir);
 
-  return { publicadas, borradores, omitidas, report, outDir, reportPath, keystaticGuard: guard, pagefind };
+  return { publicadas, borradores, omitidas, report, outDir, reportPath, keystaticGuard: guard, pagefind, offlineManifest };
 }
 
 const invokedDirectly = process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);
