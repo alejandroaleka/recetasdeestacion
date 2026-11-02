@@ -5,7 +5,10 @@
  * console summary, generates `dist/index.html`, `dist/indice/index.html`
  * and `dist/recetas/<slug>/index.html`, copies published recipe images
  * into `dist/recetas/<slug>/`, writes `dist/catalogo.json` (metadata
- * including ingredient names for search/navigation) and verifies the
+ * including ingredient names for search/navigation), generates the
+ * offline-precacheable Pagefind bundle in `dist/pagefind/` over
+ * accent-normalized in-memory HTML copies (the served HTML keeps its
+ * tildes) and verifies the
  * production Keystatic exclusion via `assertNoKeystaticInDist('dist')`.
  */
 
@@ -19,6 +22,7 @@ import {
 } from '../src/lib/recipes.mjs';
 import { loadSeasonalityCatalog } from '../src/lib/seasonality.mjs';
 import { assertNoKeystaticInDist } from '../src/lib/keystatic-guard.mjs';
+import { buildPagefindIndex } from '../src/lib/search.mjs';
 import {
   renderPortaficheroPage,
   renderIndicePage,
@@ -136,9 +140,11 @@ export async function buildSite(options = {}) {
   }));
   fs.writeFileSync(path.join(outDir, 'catalogo.json'), JSON.stringify(catalogo, null, 2), 'utf8');
 
+  const pagefind = buildPagefindIndex(outDir);
+
   const guard = assertNoKeystaticInDist(outDir);
 
-  return { publicadas, borradores, omitidas, report, outDir, reportPath, keystaticGuard: guard };
+  return { publicadas, borradores, omitidas, report, outDir, reportPath, keystaticGuard: guard, pagefind };
 }
 
 const invokedDirectly = process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);
