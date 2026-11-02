@@ -231,7 +231,7 @@ falta definir formato de entrada, prompts ni reglas de confirmación humana.
 
 ## 7. Offline
 
-**Estado: Acordado** el modelo, el manejo de cuota y la sincronización.
+**Estado: Acordado**
 
 El lector está **100 % online** o, si instaló la PWA, **100 % offline**. No hay estados
 intermedios por receta.
@@ -256,32 +256,45 @@ las de cada paso. El paquete pesa lo que pesa el catálogo, imágenes comprendid
 
 El paquete está **completo** o **no está**. No se anuncia disponibilidad parcial: si la descarga
 se interrumpió, el navegador desalojó el contenido o quedó desactualizado, la app lo dice y
-offrece completarlo. La falta de conexión o de servidor se señala explícitamente.
+ofrece completarlo. La falta de conexión o de servidor se señala explícitamente.
 
 Lo que el caché HTTP haya guardado de paso al navegar no se presenta como función: la
 disponibilidad offline es la del paquete, no la de las páginas visitadas.
 
-### Sincronización
+### Sincronización diferencial atómica
 
-Al reconectar se comparan versiones y se **ofrece** sincronizar las recetas nuevas o modificadas,
-sin imponerlo y sin obligar a descargar de nuevo lo que no cambió.
+- El build genera un manifiesto (`offline-manifest.json`) con la ruta, el hash y el tamaño en
+  bytes de cada recurso del catálogo (HTML, índice de Pagefind, datos JSON e imágenes).
+- Al reconectar, la PWA compara el manifiesto remoto con el instalado, calcula el peso exacto de
+  las diferencias y **ofrece** sincronizar las recetas nuevas o modificadas sin imponerlo.
+- La actualización es **diferencial y atómica**: descarga en un caché de preparación (*staging*)
+  únicamente los archivos nuevos o modificados y reutiliza los que no cambiaron. Recién cuando
+  todos los recursos de la nueva versión están verificados en caché, actualiza la marca de
+  versión activa y elimina los archivos huérfanos. Si la sincronización se interrumpe, la
+  versión anterior completa sigue operativa.
 
-### Riesgo de cuota
+### Riesgo de cuota y resguardo del paquete
 
 El riesgo cambia de forma: ya no es «se desalojan recetas sueltas» sino «el catálogo completo
 puede no entrar o ser desalojado entero».
 
-**Acordado:** el paquete **no se descarga sin avisar**. Antes de empezar se muestra el peso
-estimado y se pide confirmación; cancelar deja la app online, sin descarga parcial.
+**Acordado:**
 
-**Propuesto, sin confirmar:**
-
-- Solicitar almacenamiento persistente.
-- Avisar si no entra antes de empezar, en lugar de fallar a mitad.
-- Escritura atómica y marca de completez: el paquete nunca se da por completo a medias.
-- Detectar y comunicar si el navegador borró el paquete, y ofrecer reinstalarlo.
-- Mostrar progreso de la descarga y de la sincronización.
-- Servir imágenes optimizadas desde el build: el peso del paquete es el de esas imágenes.
+- **Confirmación previa con peso estimado:** el paquete no se descarga sin avisar. Antes de
+  empezar se muestra el peso estimado y se pide confirmación; cancelar deja la app online, sin
+  descarga parcial.
+- **Almacenamiento persistente:** al confirmar la descarga se solicita almacenamiento
+  persistente al navegador (`navigator.storage.persist()`).
+- **Chequeo previo de espacio:** antes de iniciar la descarga o sincronización se consulta el
+  espacio disponible (`navigator.storage.estimate()`) y se avisa antes de empezar si no entra,
+  en lugar de fallar a mitad.
+- **Escritura atómica y marca de completez:** el paquete nunca se da por completo a medias; solo
+  se marca como disponible cuando todos los recursos del manifiesto fueron verificados en caché.
+- **Detección de desalojo:** si el navegador borró recursos del paquete, la aplicación lo
+  detecta, lo comunica explícitamente y ofrece reinstalarlo.
+- **Progreso visible:** se muestra el avance durante la descarga inicial y la sincronización.
+- **Imágenes optimizadas desde el build:** las imágenes se sirven optimizadas desde el build y
+  el peso del paquete es el de esas imágenes.
 
 ---
 
@@ -518,7 +531,6 @@ inspiración y no son material autorizado para reutilizar.
 
 | Área | Qué falta |
 |---|---|
-| Offline | Persistencia, detección de desalojo y detalle de sincronización |
 | Diseño | Bocetos de portafichero, índice y lectura |
 | Accesibilidad | Rótulos y ubicación del interruptor de modo accesible |
 | Seguridad | Verificar el bloqueo del panel en producción |
