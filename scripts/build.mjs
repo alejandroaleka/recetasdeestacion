@@ -22,6 +22,7 @@ import {
 } from '../src/lib/recipes.mjs';
 import { loadSeasonalityCatalog } from '../src/lib/seasonality.mjs';
 import { assertNoKeystaticInDist } from '../src/lib/keystatic-guard.mjs';
+import { assertNoSimulatorInDist } from '../src/dev/simulator.mjs';
 import { buildPagefindIndex } from '../src/lib/search.mjs';
 import { generateOfflineManifest } from '../src/lib/offline.mjs';
 import {
@@ -223,8 +224,9 @@ export async function buildSite(options = {}) {
   const offlineManifest = generateOfflineManifest(outDir);
 
   const guard = assertNoKeystaticInDist(outDir);
+  const simulatorGuard = assertNoSimulatorInDist(outDir);
 
-  return { publicadas, borradores, omitidas, report, outDir, reportPath, keystaticGuard: guard, pagefind, offlineManifest };
+  return { publicadas, borradores, omitidas, report, outDir, reportPath, keystaticGuard: guard, simulatorGuard, pagefind, offlineManifest };
 }
 
 const invokedDirectly = process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);
