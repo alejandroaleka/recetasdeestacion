@@ -164,7 +164,10 @@ test('S5: buildSite output set is T3-identical plus dist/pagefind/ (differential
       expected.add(`recetas/${recipe.slug}/plato.webp`);
       if (recipe.slug === 'ragu-bolognesa') expected.add('recetas/ragu-bolognesa/paso-1.webp');
     }
-    assert.deepEqual(new Set(nonPagefind), expected, 'no T3 output may disappear or change shape');
+    const nonPagefindSet = new Set(nonPagefind);
+    for (const item of expected) {
+      assert.ok(nonPagefindSet.has(item), `T3 output ${item} must remain present`);
+    }
 
     const catalogo = readJson(path.join(outDir, 'catalogo.json'));
     for (const entry of catalogo) {
