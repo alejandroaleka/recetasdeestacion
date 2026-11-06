@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>03 — Revista Culinaria de Alto Contraste (Instrument Serif + DM Sans)</title>
+  <style>
+    :root {
+      --bg-canvas: #f2ece1;
+      --bg-paper: #fffdf8;
+      --bg-card-back: #f5ebd9;
+      --bg-wood: #5b3a24;
+      --bg-wood-dark: #3d2516;
+      --bg-header: #fdf9f0;
+      --ink-primary: #231912;
+      --ink-secondary: #5a4638;
+      --ink-muted: #755e4e;
+      --accent: #8f3418;
+      --accent-soft: #f9e6df;
+      --season-bg: #e7f0e4;
+      --season-ink: #234d20;
+      --border-warm: #d6c5ae;
+      --border-strong: #6e523d;
+      --focus-ring: #0b5cab;
+      /* Pila display de alto contraste + sans limpia de mesada equivalente a Instrument Serif + DM Sans */
+      --font-serif: 'Baskerville Old Face', 'Baskerville', 'Garamond', 'Didot', serif;
+      --font-sans: 'Verdana', 'Calibri', 'Helvetica Neue', sans-serif;
+      --title-scale: 1;
+      --body-scale: 1;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 24px;
+      background: var(--bg-canvas);
+      color: var(--ink-primary);
+      font-family: var(--font-sans);
+      font-size: calc(14.5px * var(--body-scale));
+      line-height: 1.55;
+    }
+
+    :focus-visible {
+      outline: 3px solid var(--focus-ring);
+      outline-offset: 2px;
+    }
+
+    .board-banner {
+      max-width: 1380px;
+      margin: 0 auto 20px;
+      padding: 18px 22px;
+      background: var(--bg-paper);
+      border: 2px solid var(--ink-primary);
+      border-radius: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      box-shadow: 4px 4px 0 rgba(35, 25, 18, 0.12);
+    }
+
+    .board-banner h1 {
+      margin: 0 0 4px;
+      font-family: var(--font-serif);
+      font-size: calc(27px * var(--title-scale));
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+    }
+
+    .board-banner p {
+      margin: 0;
+      color: var(--ink-secondary);
+      font-size: 13.5px;
+    }
+
+    .pair-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .pair-badge {
+      font-size: 11.5px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: var(--ink-primary);
+      color: #fffdf8;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
+    .tuner-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 14px;
+      background: var(--bg-header);
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--border-strong);
+    }
+
+    .tuner-control {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      font-size: 11.5px;
+      color: var(--ink-secondary);
+      font-weight: 700;
+    }
+
+    .tuner-control input[type="range"] {
+      width: 110px;
+      accent-color: var(--accent);
+    }
+
+    .copy-prompt-btn {
+      background: var(--accent);
+      color: #fffdf8;
+      border: none;
+      border-radius: 999px;
+      padding: 9px 16px;
+      font-family: var(--font-sans);
+      font-weight: 700;
+      font-size: 12.5px;
+      cursor: pointer;
+    }
+
+    .showcase-grid {
+      max-width: 1380px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.05fr 1.25fr 0.85fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .panel-card {
+      background: var(--bg-paper);
+      border: 1px solid var(--border-strong);
+      border-radius: 14px;
+      padding: 20px;
+      box-shadow: 0 8px 20px rgba(35, 25, 18, 0.07);
+    }
+
+    .mag-tag {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+
+    .active-card-banner {
+      background: var(--ink-primary);
+      color: #fffdf8;
+      border-radius: 10px;
+      padding: 10px 14px;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .active-card-banner strong {
+      font-family: var(--font-serif);
+      font-size: calc(22px * var(--title-scale));
+      font-weight: 400;
+    }
+
+    .cardbox-illustration {
+      background: linear-gradient(180deg, #6b452b 0%, var(--bg-wood) 65%, var(--bg-wood-dark) 100%);
+      border-radius: 12px;
+      padding: 14px 16px;
+      color: #fdf6ec;
+      /* Fix aplicado: 12px de separación inferior */
+      margin-bottom: 12px;
+    }
+
+    .wood-slot {
+      height: 8px;
+      background: #2a180d;
+      border-radius: 999px;
+      margin-top: 8px;
+    }
+
+    .folio-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      padding: 0 10px;
+      margin: 0;
+    }
+
+    .folio-tab {
+      appearance: none;
+      border: 1px solid var(--border-strong);
+      border-bottom: none;
+      background: var(--bg-card-back);
+      color: var(--ink-secondary);
+      font-family: var(--font-sans);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 8px 12px;
+      border-radius: 10px 10px 0 0;
+      cursor: pointer;
+    }
+
+    .folio-tab[aria-selected="true"] {
+      background: var(--bg-paper);
+      color: var(--ink-primary);
+      border-bottom-color: var(--bg-paper);
+      box-shadow: 0 2px 0 0 var(--bg-paper);
+      position: relative;
+      z-index: 3;
+    }
+
+    .folio-card {
+      background: var(--bg-paper);
+      border: 1px solid var(--border-strong);
+      border-radius: 0 12px 12px 12px;
+      padding: 18px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .display-title {
+      margin: 2px 0 10px;
+      font-family: var(--font-serif);
+      font-weight: 400;
+      font-size: calc(33px * var(--title-scale));
+      line-height: 1.06;
+      letter-spacing: -0.02em;
+    }
+
+    /* Grilla de métricas tipo revista */
+    .mag-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin: 14px 0;
+      padding: 10px;
+      background: var(--bg-header);
+      border-radius: 10px;
+      border: 1px solid var(--border-warm);
+    }
+
+    .mag-stat-label {
+      font-size: 10.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--ink-muted);
+      display: block;
+    }
+
+    .mag-stat-val {
+      font-family: var(--font-serif);
+      font-size: 20px;
+      color: var(--ink-primary);
+    }
+
+    /* Ingredientes en píldoras/tarjetas de mesada */
+    .counter-ingredients {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin: 10px 0 18px;
+    }
+
+    .counter-ing-card {
+      background: var(--bg-header);
+      border: 1px solid var(--border-warm);
+      border-radius: 8px;
+      padding: 8px 10px;
+    }
+
+    .counter-ing-card strong {
+      display: block;
+      font-size: 13.5px;
+      color: var(--accent);
+    }
+
+    .counter-ing-card span {
+      font-size: 13px;
+      color: var(--ink-primary);
+    }
+
+    /* Pasos con números serif gigantes para leer a distancia */
+    .mag-steps {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      gap: 12px;
+    }
+
+    .mag-steps li {
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      gap: 10px;
+      align-items: start;
+      padding-top: 8px;
+      border-top: 1px solid var(--border-warm);
+    }
+
+    .giant-num {
+      font-family: var(--font-serif);
+      font-size: 34px;
+      line-height: 0.9;
+      color: var(--accent);
+    }
+
+    /* Especimen + Índice con letras gigantes */
+    .specimen-box {
+      background: var(--bg-header);
+      border: 1px solid var(--border-warm);
+      border-radius: 10px;
+      padding: 14px;
+      margin-bottom: 16px;
+    }
+
+    .specimen-display {
+      font-family: var(--font-serif);
+      font-size: calc(28px * var(--title-scale));
+      line-height: 1.05;
+      margin: 0 0 6px;
+    }
+
+    .mag-index-row {
+      display: grid;
+      grid-template-columns: 36px 1fr auto;
+      align-items: baseline;
+      gap: 8px;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border-warm);
+    }
+
+    .mag-index-letter {
+      font-family: var(--font-serif);
+      font-size: 28px;
+      color: var(--accent);
+      line-height: 1;
+    }
+
+    @media (max-width: 1100px) {
+      .showcase-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="board-banner" role="banner">
+    <div>
+      <h1>Opción 03 — Revista Culinaria de Alto Contraste (Instrument Serif + DM Sans)</h1>
+      <p>Titulares serif esbeltos y grandes con contraste dramático + sans amplia y muy clara para leer ingredientes y pasos desde la mesada.</p>
+      <div class="pair-badges">
+        <span class="pair-badge">Display: Instrument Serif (previsualizada con Baskerville / Garamond)</span>
+        <span class="pair-badge">Cuerpo y Mesada: DM Sans (previsualizada con Verdana / Calibri)</span>
+        <span class="pair-badge">Offline PWA: ~45 KB en 2 archivos .woff2</span>
+      </div>
+    </div>
+    <div class="tuner-bar" aria-label="Ajustes de tipografía en vivo">
+      <label class="tuner-control">
+        <span>Escala títulos</span>
+        <input id="titleScale" type="range" min="0.9" max="1.2" step="0.02" value="1" />
+      </label>
+      <label class="tuner-control">
+        <span>Escala cuerpo</span>
+        <input id="bodyScale" type="range" min="0.92" max="1.15" step="0.02" value="1" />
+      </label>
+      <button type="button" class="copy-prompt-btn" id="copyPromptBtn">Copiar como prompt</button>
+    </div>
+  </header>
+
+  <main class="showcase-grid">
+    <!-- 1. Portafichero -->
+    <section class="panel-card" aria-label="Vista previa en Portafichero">
+      <span class="mag-tag">01 / Portafichero</span>
+      <div class="active-card-banner">
+        <span style="font-size:11px;text-transform:uppercase;letter-spacing:0.08em;">Fichero activo</span>
+        <strong>Ragú Bolognesa</strong>
+      </div>
+
+      <div class="cardbox-illustration" aria-label="Dibujo del portafichero">
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:12.5px;">
+          <span>Portafichero de Madera · Separación 12px</span>
+          <span>margin-bottom: 12px</span>
+        </div>
+        <div class="wood-slot"></div>
+      </div>
+
+      <div class="folio-tabs" role="tablist" aria-label="Pestañas del fichero">
+        <button class="folio-tab" role="tab" aria-selected="false" type="button">Humita</button>
+        <button class="folio-tab" role="tab" aria-selected="true" type="button">Ragú Bolognesa</button>
+        <button class="folio-tab" role="tab" aria-selected="false" type="button">Alcauciles</button>
+      </div>
+
+      <article class="folio-card" aria-label="Ficha activa">
+        <span class="mag-tag">Plato principal · Otoño / Invierno</span>
+        <h2 class="display-title">Ragú Bolognesa de Domingos</h2>
+        <p style="margin:0;color:var(--ink-secondary);">
+          Salsa tradicional de carne cortada a cuchillo, sofrito paciente, leche entera y reducción lenta con tomate de estación.
+        </p>
+        <div class="mag-stats">
+          <div>
+            <span class="mag-stat-label">Tiempo total</span>
+            <span class="mag-stat-val">3 h 30 m</span>
+          </div>
+          <div>
+            <span class="mag-stat-label">Porciones</span>
+            <span class="mag-stat-val">6 platos</span>
+          </div>
+          <div>
+            <span class="mag-stat-label">Estación</span>
+            <span class="mag-stat-val" style="color:var(--season-ink);">Tomate</span>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <!-- 2. Lectura de receta -->
+    <section class="panel-card" aria-label="Vista previa en Lectura de Receta">
+      <span class="mag-tag">02 / Lectura rápida en mesada</span>
+      <h2 class="display-title">Ragú Bolognesa de Domingos</h2>
+
+      <span class="mag-tag" style="margin-top:8px;">Ingredientes en tarjetas de vistazo rápido</span>
+      <div class="counter-ingredients">
+        <div class="counter-ing-card">
+          <strong>500 g</strong>
+          <span>Roast beef picado a cuchillo</span>
+        </div>
+        <div class="counter-ing-card">
+          <strong>150 g</strong>
+          <span>Panceta salada en bastones</span>
+        </div>
+        <div class="counter-ing-card">
+          <strong>1 ½ taza</strong>
+          <span>Leche entera tibia</span>
+        </div>
+        <div class="counter-ing-card">
+          <strong>600 g</strong>
+          <span>Tomate perita triturado</span>
+        </div>
+      </div>
+
+      <span class="mag-tag">Pasos numerados de alto contraste</span>
+      <ol class="mag-steps">
+        <li>
+          <span class="giant-num">01</span>
+          <div>Fundir la panceta a fuego suave en olla de hierro hasta transparentar la grasa, sumar el sofrito picado fino y cocinar 15 minutos.</div>
+        </li>
+        <li>
+          <span class="giant-num">02</span>
+          <div>Incorporar la carne en tandas, sellar bien y desglasar con vino blanco seco hasta evaporar el alcohol.</div>
+        </li>
+        <li>
+          <span class="giant-num">03</span>
+          <div>Sumar la leche tibia y la nuez moscada; cuando reduzca, agregar el tomate y cocinar 2 h 30 min a hervor mínimo.</div>
+        </li>
+      </ol>
+    </section>
+
+    <!-- 3. Especimen + Índice -->
+    <aside class="panel-card" aria-label="Especimen e Índice A-Z">
+      <span class="mag-tag">03 / Especimen e Índice</span>
+      <div class="specimen-box">
+        <p class="specimen-display">Árbol, Ñoquis, Ragú, Limón</p>
+        <p style="margin:0;font-size:13px;color:var(--ink-secondary);">Sans de mesada amplia y abierta: 150 g · 3 h 30 min · 180 °C · Lectura simple: No</p>
+      </div>
+
+      <div class="mag-index-row">
+        <span class="mag-index-letter">H</span>
+        <div>
+          <strong>Humita en Olla Cremosísima</strong>
+          <div style="font-size:12px;color:var(--ink-muted);">Choclo · Zapallo cabutia</div>
+        </div>
+        <span style="font-size:12px;font-weight:700;">45 m</span>
+      </div>
+
+      <div class="mag-index-row">
+        <span class="mag-index-letter">R</span>
+        <div>
+          <strong>Ragú Bolognesa de Domingos</strong>
+          <div style="font-size:12px;color:var(--accent);">Coincide en: ingrediente — «tomate»</div>
+        </div>
+        <span style="font-size:12px;font-weight:700;">3h 30m</span>
+      </div>
+
+      <div class="mag-index-row">
+        <span class="mag-index-letter">T</span>
+        <div>
+          <strong>Tarta Rústica de Alcauciles</strong>
+          <div style="font-size:12px;color:var(--ink-muted);">Alcaucil · Limón</div>
+        </div>
+        <span style="font-size:12px;font-weight:700;">1h 10m</span>
+      </div>
+    </aside>
+  </main>
+
+  <script>
+    const root = document.documentElement;
+    const titleInput = document.getElementById('titleScale');
+    const bodyInput = document.getElementById('bodyScale');
+    const copyBtn = document.getElementById('copyPromptBtn');
+
+    function syncScale() {
+      root.style.setProperty('--title-scale', titleInput.value);
+      root.style.setProperty('--body-scale', bodyInput.value);
+    }
+
+    titleInput.addEventListener('input', syncScale);
+    bodyInput.addEventListener('input', syncScale);
+
+    copyBtn.addEventListener('click', async () => {
+      const prompt = `Elegí la Opción 03 (Revista Culinaria de Alto Contraste: Instrument Serif + DM Sans) con escala de títulos ${titleInput.value} y escala de cuerpo ${bodyInput.value}.`;
+      try {
+        await navigator.clipboard.writeText(prompt);
+        copyBtn.textContent = '¡Prompt copiado!';
+        setTimeout(() => { copyBtn.textContent = 'Copiar como prompt'; }, 1800);
+      } catch {
+        copyBtn.textContent = prompt;
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>02 — Editorial Clásica de Libro (Newsreader + Plus Jakarta Sans)</title>
+  <style>
+    :root {
+      --bg-canvas: #f2ece1;
+      --bg-paper: #fffdf8;
+      --bg-card-back: #f5ebd9;
+      --bg-wood: #5b3a24;
+      --bg-wood-dark: #3d2516;
+      --bg-header: #fdf9f0;
+      --ink-primary: #231912;
+      --ink-secondary: #5a4638;
+      --ink-muted: #755e4e;
+      --accent: #8f3418;
+      --accent-soft: #f9e6df;
+      --season-bg: #e7f0e4;
+      --season-ink: #234d20;
+      --border-warm: #d6c5ae;
+      --border-strong: #6e523d;
+      --focus-ring: #0b5cab;
+      /* Pila editorial de libro equivalente a Newsreader + Plus Jakarta Sans */
+      --font-serif: 'Constantia', 'Cambria', 'Hoefler Text', 'Charter', serif;
+      --font-sans: 'Trebuchet MS', 'Optima', 'Segoe UI', sans-serif;
+      --title-scale: 1;
+      --body-scale: 1;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 24px;
+      background: var(--bg-canvas);
+      color: var(--ink-primary);
+      font-family: var(--font-sans);
+      font-size: calc(15.5px * var(--body-scale));
+      line-height: 1.62;
+      font-variant-numeric: tabular-nums;
+    }
+
+    :focus-visible {
+      outline: 3px solid var(--focus-ring);
+      outline-offset: 2px;
+    }
+
+    .board-banner {
+      max-width: 1380px;
+      margin: 0 auto 20px;
+      padding: 18px 22px;
+      background: var(--bg-paper);
+      border: 1px solid var(--border-warm);
+      border-top: 4px double var(--border-strong);
+      border-radius: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      box-shadow: 0 4px 12px rgba(35, 25, 18, 0.05);
+    }
+
+    .board-banner h1 {
+      margin: 0 0 4px;
+      font-family: var(--font-serif);
+      font-size: calc(23px * var(--title-scale));
+      font-weight: 600;
+      letter-spacing: 0.01em;
+    }
+
+    .board-banner p {
+      margin: 0;
+      color: var(--ink-secondary);
+      font-size: 14px;
+    }
+
+    .pair-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .pair-badge {
+      font-size: 12px;
+      padding: 3px 10px;
+      border-radius: 4px;
+      background: var(--bg-header);
+      color: var(--ink-primary);
+      font-weight: 700;
+      border: 1px solid var(--border-warm);
+    }
+
+    .tuner-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 14px;
+      background: var(--bg-header);
+      padding: 10px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--border-warm);
+    }
+
+    .tuner-control {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      font-size: 12px;
+      color: var(--ink-secondary);
+      font-weight: 600;
+    }
+
+    .tuner-control input[type="range"] {
+      width: 110px;
+      accent-color: var(--accent);
+    }
+
+    .copy-prompt-btn {
+      background: var(--ink-primary);
+      color: #fffdf8;
+      border: none;
+      border-radius: 6px;
+      padding: 9px 14px;
+      font-family: var(--font-sans);
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .showcase-grid {
+      max-width: 1380px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.05fr 1.25fr 0.85fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .panel-card {
+      background: var(--bg-paper);
+      border: 1px solid var(--border-warm);
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 6px 18px rgba(35, 25, 18, 0.06);
+    }
+
+    /* Versalitas editoriales para rúbricas */
+    .editorial-rubric {
+      display: block;
+      font-family: var(--font-serif);
+      font-variant: small-caps;
+      letter-spacing: 0.1em;
+      font-weight: 700;
+      font-size: 13px;
+      color: var(--accent);
+      margin-bottom: 6px;
+    }
+
+    .active-card-banner {
+      background: var(--bg-header);
+      border-top: 2px solid var(--border-strong);
+      border-bottom: 1px solid var(--border-warm);
+      padding: 8px 12px;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+
+    .active-card-banner strong {
+      font-family: var(--font-serif);
+      font-size: calc(19px * var(--title-scale));
+    }
+
+    .cardbox-illustration {
+      background: linear-gradient(180deg, #6b452b 0%, var(--bg-wood) 65%, var(--bg-wood-dark) 100%);
+      border-radius: 10px;
+      padding: 14px 16px;
+      color: #fdf6ec;
+      /* Fix aplicado: 12px de separación inferior */
+      margin-bottom: 12px;
+    }
+
+    .wood-slot {
+      height: 8px;
+      background: #2a180d;
+      border-radius: 999px;
+      margin-top: 8px;
+    }
+
+    .folio-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      padding: 0 10px;
+      margin: 0;
+    }
+
+    .folio-tab {
+      appearance: none;
+      border: 1px solid var(--border-strong);
+      border-bottom: none;
+      background: var(--bg-card-back);
+      color: var(--ink-secondary);
+      font-family: var(--font-sans);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      padding: 7px 13px;
+      border-radius: 8px 8px 0 0;
+      cursor: pointer;
+    }
+
+    .folio-tab[aria-selected="true"] {
+      background: var(--bg-paper);
+      color: var(--ink-primary);
+      border-bottom-color: var(--bg-paper);
+      box-shadow: 0 2px 0 0 var(--bg-paper);
+      position: relative;
+      z-index: 3;
+    }
+
+    .folio-card {
+      background: var(--bg-paper);
+      border: 1px solid var(--border-strong);
+      border-radius: 0 10px 10px 10px;
+      padding: 18px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .folio-card h2 {
+      margin: 2px 0 8px;
+      font-family: var(--font-serif);
+      font-weight: 600;
+      font-size: calc(25px * var(--title-scale));
+      line-height: 1.2;
+    }
+
+    .folio-card p {
+      font-family: var(--font-serif);
+      font-size: 16px;
+      color: var(--ink-secondary);
+      margin: 0 0 12px;
+    }
+
+    .editorial-meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      padding-top: 10px;
+      border-top: 3px double var(--border-warm);
+      font-size: 13px;
+      color: var(--ink-secondary);
+    }
+
+    /* Columna 2: Libro clásico con tabla de dos columnas tabulares */
+    .book-title {
+      margin: 0 0 6px;
+      font-family: var(--font-serif);
+      font-weight: 600;
+      font-size: calc(29px * var(--title-scale));
+      line-height: 1.16;
+    }
+
+    .book-deck {
+      margin: 0 0 14px;
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 16.5px;
+      color: var(--ink-secondary);
+      padding-bottom: 12px;
+      border-bottom: 3px double var(--border-warm);
+    }
+
+    .ledger-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 18px;
+      font-size: 14.5px;
+    }
+
+    .ledger-table tr {
+      border-bottom: 1px solid var(--border-warm);
+    }
+
+    .ledger-table td {
+      padding: 6px 4px;
+      vertical-align: baseline;
+    }
+
+    .ledger-qty {
+      width: 92px;
+      font-weight: 700;
+      color: var(--accent);
+      text-align: right;
+      padding-right: 14px !important;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .ledger-steps {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      gap: 12px;
+    }
+
+    .ledger-steps li {
+      display: grid;
+      grid-template-columns: 44px 1fr;
+      gap: 8px;
+      font-family: var(--font-serif);
+      font-size: 16px;
+    }
+
+    .roman-step {
+      font-family: var(--font-serif);
+      font-variant: small-caps;
+      font-weight: 700;
+      color: var(--accent);
+      font-size: 15px;
+    }
+
+    /* Columna 3: Especimen + Índice de libro */
+    .specimen-box {
+      background: var(--bg-header);
+      border: 1px solid var(--border-warm);
+      border-left: 4px solid var(--accent);
+      padding: 14px;
+      margin-bottom: 16px;
+    }
+
+    .specimen-serif {
+      font-family: var(--font-serif);
+      font-size: calc(21px * var(--title-scale));
+      margin: 0 0 4px;
+    }
+
+    .specimen-sc {
+      font-family: var(--font-serif);
+      font-variant: small-caps;
+      letter-spacing: 0.08em;
+      color: var(--accent);
+      font-size: 14px;
+      margin: 0 0 8px;
+    }
+
+    .index-entry {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px;
+      padding: 6px 0;
+      border-bottom: 1px solid var(--border-warm);
+      font-size: 14px;
+    }
+
+    .index-entry strong {
+      font-family: var(--font-serif);
+      font-size: 15.5px;
+    }
+
+    @media (max-width: 1100px) {
+      .showcase-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="board-banner" role="banner">
+    <div>
+      <h1>Opción 02 — Editorial Clásica de Libro (Newsreader + Plus Jakarta Sans)</h1>
+      <p>Rúbricas en versalitas, filetes dobles de libro clásico, cuerpo de lectura en serif literaria y columna tabular alineada para cantidades.</p>
+      <div class="pair-badges">
+        <span class="pair-badge">Títulos y prosa: Newsreader (previsualizada con Constantia / Cambria)</span>
+        <span class="pair-badge">UI y tablas: Plus Jakarta Sans (previsualizada con Trebuchet MS)</span>
+        <span class="pair-badge">Offline PWA: ~55 KB en 2 archivos .woff2</span>
+      </div>
+    </div>
+    <div class="tuner-bar" aria-label="Ajustes de tipografía en vivo">
+      <label class="tuner-control">
+        <span>Escala títulos</span>
+        <input id="titleScale" type="range" min="0.9" max="1.2" step="0.02" value="1" />
+      </label>
+      <label class="tuner-control">
+        <span>Escala cuerpo</span>
+        <input id="bodyScale" type="range" min="0.92" max="1.15" step="0.02" value="1" />
+      </label>
+      <button type="button" class="copy-prompt-btn" id="copyPromptBtn">Copiar como prompt</button>
+    </div>
+  </header>
+
+  <main class="showcase-grid">
+    <!-- 1. Portafichero -->
+    <section class="panel-card" aria-label="Vista previa en Portafichero">
+      <span class="editorial-rubric">i · portafichero de cocina</span>
+      <div class="active-card-banner">
+        <span style="font-variant:small-caps;letter-spacing:0.06em;color:var(--ink-muted);">ficha seleccionada</span>
+        <strong>Ragú Bolognesa</strong>
+      </div>
+
+      <div class="cardbox-illustration" aria-label="Dibujo del portafichero">
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px;">
+          <span>Fichero de Roble · Estación Otoño / Invierno</span>
+          <span>margin-bottom: 12px</span>
+        </div>
+        <div class="wood-slot"></div>
+      </div>
+
+      <div class="folio-tabs" role="tablist" aria-label="Pestañas del fichero">
+        <button class="folio-tab" role="tab" aria-selected="false" type="button">Humita en Olla</button>
+        <button class="folio-tab" role="tab" aria-selected="true" type="button">Ragú Bolognesa</button>
+        <button class="folio-tab" role="tab" aria-selected="false" type="button">Tarta de Alcauciles</button>
+      </div>
+
+      <article class="folio-card" aria-label="Ficha activa">
+        <span class="editorial-rubric">plato principal · tradición boloñesa</span>
+        <h2>Ragú Bolognesa de Domingos</h2>
+        <p>
+          Salsa tradicional de carne cortada a cuchillo, sofrito paciente de apio, zanahoria y cebolla, leche entera y reducción lenta con tomate de estación.
+        </p>
+        <div class="editorial-meta-row">
+          <span><strong>Tiempo:</strong> 3 h 30 min</span>
+          <span><strong>Rinde:</strong> 6 porciones</span>
+          <span style="color:var(--season-ink);font-weight:700;">Estación: Tomate · Puerro</span>
+        </div>
+      </article>
+    </section>
+
+    <!-- 2. Lectura de libro -->
+    <section class="panel-card" aria-label="Vista previa en Lectura de Receta">
+      <span class="editorial-rubric">ii · lectura de receta tipo libro</span>
+      <h2 class="book-title">Ragú Bolognesa de Domingos</h2>
+      <p class="book-deck">Cocción paciente en olla de hierro con leche entera y tomates maduros de fin de verano.</p>
+
+      <span class="editorial-rubric">proporciones e ingredientes (6 comensales)</span>
+      <table class="ledger-table" aria-label="Ingredientes">
+        <tbody>
+          <tr>
+            <td class="ledger-qty">500 g</td>
+            <td>Roast beef picado grueso a cuchillo</td>
+          </tr>
+          <tr>
+            <td class="ledger-qty">150 g</td>
+            <td>Panceta salada en bastones cortos</td>
+          </tr>
+          <tr>
+            <td class="ledger-qty">1 ½ taza</td>
+            <td>Leche entera tibia</td>
+          </tr>
+          <tr>
+            <td class="ledger-qty">600 g</td>
+            <td>Tomate perita maduro triturado</td>
+          </tr>
+          <tr>
+            <td class="ledger-qty">a gusto</td>
+            <td><em>Sal gruesa, pimienta negra recién molida y nuez moscada</em></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <span class="editorial-rubric">procedimiento</span>
+      <ol class="ledger-steps">
+        <li>
+          <span class="roman-step">paso i</span>
+          <div>Fundir la panceta a fuego suave en olla de hierro hasta transparentar la grasa, sumar el sofrito picado muy fino y cocinar 15 minutos sin dorar de más.</div>
+        </li>
+        <li>
+          <span class="roman-step">paso ii</span>
+          <div>Incorporar la carne en tandas, sellar bien y desglasar con vino blanco seco hasta evaporar el alcohol por completo.</div>
+        </li>
+        <li>
+          <span class="roman-step">paso iii</span>
+          <div>Sumar la leche tibia y la nuez moscada; cuando reduzca, agregar el tomate y cocinar 2 h 30 min a hervor mínimo.</div>
+        </li>
+      </ol>
+    </section>
+
+    <!-- 3. Especimen + Índice -->
+    <aside class="panel-card" aria-label="Especimen e Índice A-Z">
+      <span class="editorial-rubric">iii · especimen e índice alfabético</span>
+      <div class="specimen-box">
+        <p class="specimen-serif">Árbol, Ñoquis, Ragú, Limón</p>
+        <p class="specimen-sc">versalitas · capítulo de otoño · sección a–z</p>
+        <p style="margin:0;font-size:13.5px;color:var(--ink-secondary);">Cifras tabulares: 150 g / 500 g / 1.250 ml · Lectura simple: No</p>
+      </div>
+
+      <span class="editorial-rubric">índice general (a–z)</span>
+      <div class="index-entry">
+        <div>
+          <strong>Humita en Olla Cremosísima</strong>
+          <div style="font-size:12.5px;color:var(--ink-muted);">Choclo, zapallo cabutia, albahaca</div>
+        </div>
+        <span>45 min</span>
+      </div>
+      <div class="index-entry">
+        <div>
+          <strong>Ragú Bolognesa de Domingos</strong>
+          <div style="font-size:12.5px;color:var(--accent);">Coincide en: ingrediente — «tomate perita»</div>
+        </div>
+        <span>3 h 30 m</span>
+      </div>
+      <div class="index-entry">
+        <div>
+          <strong>Tarta Rústica de Alcauciles</strong>
+          <div style="font-size:12.5px;color:var(--ink-muted);">Alcaucil platense, limón, masa quebrada</div>
+        </div>
+        <span>1 h 10 m</span>
+      </div>
+    </aside>
+  </main>
+
+  <script>
+    const root = document.documentElement;
+    const titleInput = document.getElementById('titleScale');
+    const bodyInput = document.getElementById('bodyScale');
+    const copyBtn = document.getElementById('copyPromptBtn');
+
+    function syncScale() {
+      root.style.setProperty('--title-scale', titleInput.value);
+      root.style.setProperty('--body-scale', bodyInput.value);
+    }
+
+    titleInput.addEventListener('input', syncScale);
+    bodyInput.addEventListener('input', syncScale);
+
+    copyBtn.addEventListener('click', async () => {
+      const prompt = `Elegí la Opción 02 (Editorial Clásica de Libro: Newsreader + Plus Jakarta Sans) con escala de títulos ${titleInput.value} y escala de cuerpo ${bodyInput.value}.`;
+      try {
+        await navigator.clipboard.writeText(prompt);
+        copyBtn.textContent = '¡Prompt copiado!';
+        setTimeout(() => { copyBtn.textContent = 'Copiar como prompt'; }, 1800);
+      } catch {
+        copyBtn.textContent = prompt;
+      }
+    });
+  </script>
+</body>
+</html>
