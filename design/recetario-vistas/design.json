@@ -1,6 +1,7 @@
 {
   "title": "Recetario — Vistas de Portafichero, Índice y Lectura",
   "brief": "Tres direcciones visuales e interactivas para las vistas principales de Recetario (Portafichero, Índice/Búsqueda con Pagefind y Lectura de receta), con cabecera superior fija e interruptor «Lectura simple: Sí / No».",
+  "feature": "odd/tasks/recetario-mvp.md",
   "artboards": [
     {
       "file": "01-fichero-clasico-editorial.html",

@@ -1,0 +1,13 @@
+# T5 (S6): Cloudflare Pages headers for the all-or-nothing PWA package.
+# The versioned manifest and the Service Worker shell must always be fresh
+# (no-cache) so installs and differential syncs see new versions; recipe
+# images are content-hashed by build output and cache immutably for a year.
+
+/offline-manifest.json
+  Cache-Control: no-cache
+
+/sw.js
+  Cache-Control: no-cache
+
+/recetas/*
+  Cache-Control: public, max-age=31536000, immutable

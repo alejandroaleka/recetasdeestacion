@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "chosen": "03-revista-culinaria-contraste.html",
+  "handoffs": {
+    "03-revista-culinaria-contraste.html": {
+      "status": "implemented",
+      "queued": false,
+      "sentAt": "2026-11-06T14:51:15.475Z",
+      "startedAt": "2026-11-06T14:51:38.597Z",
+      "implementedAt": "2026-11-06T14:59:55.726Z",
+      "feature": "odd/tasks/recetario-mvp.md",
+      "note": "Applied Direction 03 (Instrument Serif + DM Sans stack, --title-scale: 1.02, --body-scale: 0.94, high-contrast active plaque, display titles, glanceable ingredient cards, and oversized serif step counters) in src/lib/render-pages.mjs; 76/76 tests pass and static build is clean."
+    }
+  }
+}

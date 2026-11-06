@@ -1,0 +1,28 @@
+{
+  "title": "Recetario — Comparativa de Tipografías (Papel y Madera)",
+  "brief": "Tres direcciones tipográficas lado a lado sobre el diseño Fichero Clásico de Cocina (Dirección 01), incluyendo el ajuste de margen del portafichero y pestaña activa integrada.",
+  "feature": "odd/tasks/recetario-mvp.md",
+  "artboards": [
+    {
+      "file": "01-imprenta-artesanal-calida.html",
+      "title": "Imprenta Artesanal y Cálida (Fraunces + Work Sans)",
+      "tradeoff": "Mucha calidez e identidad de recetario artesanal con guías punteadas y capitular; los titulares ocupan algo más de alto.",
+      "width": 1440,
+      "height": 900
+    },
+    {
+      "file": "02-editorial-clasica-libro.html",
+      "title": "Editorial Clásica de Libro (Newsreader + Plus Jakarta Sans)",
+      "tradeoff": "Lectura larga serena con versalitas, filetes dobles y cantidades tabulares; estética más sobria y contenida.",
+      "width": 1440,
+      "height": 900
+    },
+    {
+      "file": "03-revista-culinaria-contraste.html",
+      "title": "Revista Culinaria de Alto Contraste (Instrument Serif + DM Sans)",
+      "tradeoff": "Impacto visual inmediato y lectura rápida a distancia en la mesada; contraste más dramático y moderno.",
+      "width": 1440,
+      "height": 900
+    }
+  ]
+}

@@ -1,0 +1,184 @@
+{
+  "paisCodigo": "AR",
+  "paisNombre": "Argentina",
+  "calendarioMensual": {
+    "1": "Verano",
+    "2": "Verano",
+    "3": "Otoño",
+    "4": "Otoño",
+    "5": "Otoño",
+    "6": "Invierno",
+    "7": "Invierno",
+    "8": "Invierno",
+    "9": "Primavera",
+    "10": "Primavera",
+    "11": "Primavera",
+    "12": "Verano"
+  },
+  "subregiones": [
+    {
+      "id": "pampeana",
+      "nombre": "Región Pampeana",
+      "provincias": ["Buenos Aires", "CABA", "Córdoba", "Santa Fe", "Entre Ríos", "La Pampa"],
+      "limites": { "latMin": -39.2, "latMax": -30.0, "lonMin": -65.5, "lonMax": -56.5 }
+    },
+    {
+      "id": "cuyo",
+      "nombre": "Cuyo",
+      "provincias": ["Mendoza", "San Juan", "San Luis"],
+      "limites": { "latMin": -37.6, "latMax": -28.3, "lonMin": -70.6, "lonMax": -65.0 }
+    },
+    {
+      "id": "noa",
+      "nombre": "Noroeste (NOA)",
+      "provincias": ["Salta", "Jujuy", "Tucumán", "Catamarca", "Santiago del Estero", "La Rioja"],
+      "limites": { "latMin": -30.0, "latMax": -21.7, "lonMin": -69.1, "lonMax": -61.7 }
+    },
+    {
+      "id": "nea",
+      "nombre": "Noreste (NEA)",
+      "provincias": ["Misiones", "Corrientes", "Chaco", "Formosa"],
+      "limites": { "latMin": -30.5, "latMax": -22.4, "lonMin": -62.3, "lonMax": -53.6 }
+    },
+    {
+      "id": "patagonia",
+      "nombre": "Patagonia",
+      "provincias": ["Neuquén", "Río Negro", "Chubut", "Santa Cruz", "Tierra del Fuego"],
+      "limites": { "latMin": -55.1, "latMax": -36.0, "lonMin": -73.6, "lonMax": -62.0 }
+    }
+  ],
+  "productos": [
+    {
+      "id": "zapallo-cabutia",
+      "nombre": "Zapallo cabutia / anco",
+      "estacionesPorSubregion": {
+        "pampeana": ["Otoño", "Invierno"],
+        "cuyo": ["Otoño", "Invierno"],
+        "noa": ["Otoño", "Invierno", "Primavera"],
+        "nea": ["Otoño", "Invierno"],
+        "patagonia": ["Otoño"]
+      }
+    },
+    {
+      "id": "tomate",
+      "nombre": "Tomate fresco de huerta",
+      "estacionesPorSubregion": {
+        "pampeana": ["Verano"],
+        "cuyo": ["Verano", "Otoño"],
+        "noa": ["Primavera", "Verano", "Otoño"],
+        "nea": ["Primavera", "Verano"],
+        "patagonia": ["Verano"]
+      }
+    },
+    {
+      "id": "membrillo",
+      "nombre": "Membrillo",
+      "estacionesPorSubregion": {
+        "pampeana": ["Otoño"],
+        "cuyo": ["Otoño"],
+        "noa": ["Otoño"],
+        "nea": ["Otoño"],
+        "patagonia": ["Otoño"]
+      }
+    },
+    {
+      "id": "manzana",
+      "nombre": "Manzana criolla / de valle",
+      "estacionesPorSubregion": {
+        "pampeana": ["Otoño", "Invierno"],
+        "cuyo": ["Otoño", "Invierno"],
+        "noa": ["Otoño"],
+        "nea": ["Otoño"],
+        "patagonia": ["Verano", "Otoño", "Invierno"]
+      }
+    },
+    {
+      "id": "choclo",
+      "nombre": "Choclo / maíz tierno",
+      "estacionesPorSubregion": {
+        "pampeana": ["Verano"],
+        "cuyo": ["Verano"],
+        "noa": ["Verano", "Otoño"],
+        "nea": ["Primavera", "Verano"],
+        "patagonia": ["Verano"]
+      }
+    },
+    {
+      "id": "alcaucil",
+      "nombre": "Alcaucil (alcachofa)",
+      "estacionesPorSubregion": {
+        "pampeana": ["Invierno", "Primavera"],
+        "cuyo": ["Primavera"],
+        "noa": ["Invierno", "Primavera"],
+        "nea": ["Primavera"],
+        "patagonia": ["Primavera"]
+      }
+    },
+    {
+      "id": "citricos",
+      "nombre": "Cítricos (naranja, mandarina, limón)",
+      "estacionesPorSubregion": {
+        "pampeana": ["Otoño", "Invierno"],
+        "cuyo": ["Invierno"],
+        "noa": ["Otoño", "Invierno", "Primavera"],
+        "nea": ["Otoño", "Invierno", "Primavera"],
+        "patagonia": ["Invierno"]
+      }
+    },
+    {
+      "id": "frutilla",
+      "nombre": "Frutilla",
+      "estacionesPorSubregion": {
+        "pampeana": ["Primavera", "Verano"],
+        "cuyo": ["Primavera"],
+        "noa": ["Invierno", "Primavera"],
+        "nea": ["Invierno", "Primavera"],
+        "patagonia": ["Verano"]
+      }
+    },
+    {
+      "id": "espinaca",
+      "nombre": "Espinaca de hoja",
+      "estacionesPorSubregion": {
+        "pampeana": ["Otoño", "Invierno", "Primavera"],
+        "cuyo": ["Otoño", "Invierno"],
+        "noa": ["Otoño", "Invierno"],
+        "nea": ["Invierno"],
+        "patagonia": ["Otoño", "Primavera"]
+      }
+    },
+    {
+      "id": "berenjena",
+      "nombre": "Berenjena",
+      "estacionesPorSubregion": {
+        "pampeana": ["Verano", "Otoño"],
+        "cuyo": ["Verano", "Otoño"],
+        "noa": ["Primavera", "Verano", "Otoño"],
+        "nea": ["Verano", "Otoño"],
+        "patagonia": ["Verano"]
+      }
+    },
+    {
+      "id": "higo",
+      "nombre": "Higo fresco",
+      "estacionesPorSubregion": {
+        "pampeana": ["Verano", "Otoño"],
+        "cuyo": ["Verano", "Otoño"],
+        "noa": ["Verano", "Otoño"],
+        "nea": ["Verano"],
+        "patagonia": ["Otoño"]
+      }
+    },
+    {
+      "id": "puerro",
+      "nombre": "Puerro",
+      "estacionesPorSubregion": {
+        "pampeana": ["Otoño", "Invierno"],
+        "cuyo": ["Otoño", "Invierno"],
+        "noa": ["Invierno"],
+        "nea": ["Invierno"],
+        "patagonia": ["Otoño", "Invierno"]
+      }
+    }
+  ]
+}

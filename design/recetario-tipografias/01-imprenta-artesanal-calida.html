@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>01 — Imprenta Artesanal y Cálida (Fraunces + Work Sans)</title>
+  <style>
+    :root {
+      --bg-canvas: #f2ece1;
+      --bg-paper: #fffdf8;
+      --bg-card-back: #f5ebd9;
+      --bg-wood: #5b3a24;
+      --bg-wood-dark: #3d2516;
+      --bg-header: #fdf9f0;
+      --ink-primary: #231912;
+      --ink-secondary: #5a4638;
+      --ink-muted: #755e4e;
+      --accent: #8f3418;
+      --accent-soft: #f9e6df;
+      --season-bg: #e7f0e4;
+      --season-ink: #234d20;
+      --border-warm: #d6c5ae;
+      --border-strong: #6e523d;
+      --focus-ring: #0b5cab;
+      /* Pila local artesanal equivalente a Fraunces + Work Sans */
+      --font-serif: 'Palatino Linotype', 'Book Antiqua', Palatino, 'URW Palladio L', serif;
+      --font-sans: 'Candara', 'Trebuchet MS', 'Gill Sans', sans-serif;
+      --title-scale: 1;
+      --body-scale: 1;
+      --line-relax: 1.58;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 24px;
+      background: var(--bg-canvas);
+      color: var(--ink-primary);
+      font-family: var(--font-sans);
+      font-size: calc(16px * var(--body-scale));
+      line-height: var(--line-relax);
+    }
+
+    :focus-visible {
+      outline: 3px solid var(--focus-ring);
+      outline-offset: 2px;
+    }
+
+    /* Cabecera comparativa + controles */
+    .board-banner {
+      max-width: 1380px;
+      margin: 0 auto 20px;
+      padding: 18px 22px;
+      background: var(--bg-paper);
+      border: 1px solid var(--border-warm);
+      border-radius: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      box-shadow: 0 4px 12px rgba(35, 25, 18, 0.06);
+    }
+
+    .board-banner h1 {
+      margin: 0 0 4px;
+      font-family: var(--font-serif);
+      font-size: calc(23px * var(--title-scale));
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: var(--ink-primary);
+    }
+
+    .board-banner p {
+      margin: 0;
+      color: var(--ink-secondary);
+      font-size: 14px;
+    }
+
+    .pair-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .pair-badge {
+      font-size: 12px;
+      padding: 3px 10px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-weight: 700;
+      border: 1px solid rgba(143, 52, 24, 0.25);
+    }
+
+    .tuner-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 14px;
+      background: var(--bg-header);
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--border-warm);
+    }
+
+    .tuner-control {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      font-size: 12px;
+      color: var(--ink-secondary);
+      font-weight: 600;
+    }
+
+    .tuner-control input[type="range"] {
+      width: 110px;
+      accent-color: var(--accent);
+    }
+
+    .copy-prompt-btn {
+      background: var(--accent);
+      color: #fffdf8;
+      border: none;
+      border-radius: 8px;
+      padding: 9px 14px;
+      font-family: var(--font-sans);
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .copy-prompt-btn:hover {
+      background: #722710;
+    }
+
+    /* Grilla principal del artboard */
+    .showcase-grid {
+      max-width: 1380px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.05fr 1.25fr 0.85fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .panel-card {
+      background: var(--bg-paper);
+      border: 1px solid var(--border-warm);
+      border-radius: 14px;
+      padding: 20px;
+      box-shadow: 0 8px 22px rgba(35, 25, 18, 0.07);
+    }
+
+    .panel-kicker {
+      display: inline-block;
+      font-family: var(--font-serif);
+      font-style: italic;
+      color: var(--accent);
+      font-size: 14px;
+      margin-bottom: 6px;
+    }
+
+    /* Columna 1: Portafichero con el fix de 12px y pestaña unida */
+    .active-card-banner {
+      background: var(--bg-header);
+      border: 1px solid var(--border-warm);
+      border-radius: 10px;
+      padding: 10px 14px;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+
+    .active-card-banner span {
+      font-size: 12px;
+      color: var(--ink-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .active-card-banner strong {
+      font-family: var(--font-serif);
+      font-size: calc(20px * var(--title-scale));
+      color: var(--ink-primary);
+    }
+
+    .cardbox-illustration {
+      background: linear-gradient(180deg, #6b452b 0%, var(--bg-wood) 65%, var(--bg-wood-dark) 100%);
+      border-radius: 12px;
+      padding: 14px 16px;
+      color: #fdf6ec;
+      /* Fix aplicado: margen inferior de 12px para despegar las pestañas */
+      margin-bottom: 12px;
+      box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.14), 0 4px 10px rgba(35, 25, 18, 0.16);
+    }
+
+    .wood-slot {
+      height: 8px;
+      background: #2a180d;
+      border-radius: 999px;
+      margin-top: 8px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .folio-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      padding: 0 10px;
+      margin: 0;
+    }
+
+    .folio-tab {
+      appearance: none;
+      border: 1px solid var(--border-strong);
+      border-bottom: none;
+      background: var(--bg-card-back);
+      color: var(--ink-secondary);
+      font-family: var(--font-serif);
+      font-size: 14px;
+      font-weight: 700;
+      padding: 7px 13px;
+      border-radius: 10px 10px 0 0;
+      cursor: pointer;
+    }
+
+    /* Fix aplicado: pestaña activa fusionada con .folio-card */
+    .folio-tab[aria-selected="true"] {
+      background: var(--bg-paper);
+      color: var(--ink-primary);
+      border-bottom-color: var(--bg-paper);
+      box-shadow: 0 2px 0 0 var(--bg-paper);
+      position: relative;
+      z-index: 3;
+    }
+
+    .folio-card {
+      background: var(--bg-paper);
+      border: 1px solid var(--border-strong);
+      border-radius: 0 12px 12px 12px;
+      padding: 18px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .folio-card h2 {
+      margin: 4px 0 8px;
+      font-family: var(--font-serif);
+      font-size: calc(26px * var(--title-scale));
+      line-height: 1.18;
+      color: var(--ink-primary);
+    }
+
+    .recipe-lead-dropcap::first-letter {
+      font-family: var(--font-serif);
+      font-size: 2.5em;
+      font-weight: 700;
+      float: left;
+      line-height: 0.88;
+      margin: 2px 8px 0 0;
+      color: var(--accent);
+    }
+
+    .meta-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 12px 0;
+    }
+
+    .meta-pill {
+      font-size: 13px;
+      padding: 4px 10px;
+      border-radius: 8px;
+      background: var(--bg-header);
+      border: 1px solid var(--border-warm);
+      color: var(--ink-secondary);
+    }
+
+    .meta-pill.season {
+      background: var(--season-bg);
+      color: var(--season-ink);
+      border-color: #bdd4b8;
+      font-weight: 700;
+    }
+
+    /* Columna 2: Lectura de Receta estilo Imprenta Artesanal */
+    .reading-header h2 {
+      margin: 2px 0 6px;
+      font-family: var(--font-serif);
+      font-size: calc(30px * var(--title-scale));
+      line-height: 1.15;
+    }
+
+    .reading-subtitle {
+      margin: 0 0 14px;
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 17px;
+      color: var(--ink-secondary);
+    }
+
+    .section-heading {
+      font-family: var(--font-serif);
+      font-size: calc(19px * var(--title-scale));
+      color: var(--accent);
+      margin: 18px 0 10px;
+      padding-bottom: 4px;
+      border-bottom: 2px solid var(--border-warm);
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+
+    /* Lista de ingredientes con línea punteada artesanal */
+    .craft-ingredients {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      gap: 8px;
+    }
+
+    .craft-ingredients li {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      font-size: 15px;
+    }
+
+    .ing-qty {
+      font-family: var(--font-serif);
+      font-weight: 700;
+      color: var(--ink-primary);
+      white-space: nowrap;
+    }
+
+    .ing-dots {
+      flex: 1;
+      border-bottom: 1px dotted var(--border-strong);
+      min-width: 16px;
+      opacity: 0.5;
+    }
+
+    .ing-name {
+      color: var(--ink-primary);
+    }
+
+    .ing-free {
+      font-family: var(--font-serif);
+      font-style: italic;
+      color: var(--ink-secondary);
+    }
+
+    .craft-steps {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      gap: 12px;
+    }
+
+    .craft-steps li {
+      display: grid;
+      grid-template-columns: 32px 1fr;
+      gap: 10px;
+      align-items: start;
+    }
+
+    .step-badge {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #fffdf8;
+      font-family: var(--font-serif);
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      margin-top: 2px;
+    }
+
+    /* Columna 3: Especimen tipográfico + Índice A-Z */
+    .specimen-box {
+      background: var(--bg-header);
+      border: 1px solid var(--border-warm);
+      border-radius: 10px;
+      padding: 14px;
+      margin-bottom: 16px;
+    }
+
+    .specimen-serif {
+      font-family: var(--font-serif);
+      font-size: calc(22px * var(--title-scale));
+      font-weight: 700;
+      margin: 0 0 4px;
+    }
+
+    .specimen-italic {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 16px;
+      color: var(--accent);
+      margin: 0 0 8px;
+    }
+
+    .specimen-sans {
+      font-family: var(--font-sans);
+      font-size: 14px;
+      color: var(--ink-secondary);
+      margin: 0;
+    }
+
+    .index-letter-block {
+      margin-top: 12px;
+    }
+
+    .index-letter {
+      font-family: var(--font-serif);
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--accent);
+      border-bottom: 1px solid var(--border-warm);
+      margin-bottom: 6px;
+    }
+
+    .index-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 5px 0;
+      font-size: 14px;
+      border-bottom: 1px dashed var(--border-warm);
+    }
+
+    @media (max-width: 1100px) {
+      .showcase-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="board-banner" role="banner">
+    <div>
+      <h1>Opción 01 — Imprenta Artesanal y Cálida (Fraunces + Work Sans)</h1>
+      <p>Remates orgánicos, subtítulos en cursiva cálida, capitular editorial y tabla de ingredientes con guía punteada de libro de cocina artesanal.</p>
+      <div class="pair-badges">
+        <span class="pair-badge">Títulos: Fraunces (previsualizada con Palatino / Book Antiqua)</span>
+        <span class="pair-badge">Cuerpo y UI: Work Sans (previsualizada con Candara / Gill Sans)</span>
+        <span class="pair-badge">Offline PWA: ~65 KB en 2 archivos .woff2</span>
+      </div>
+    </div>
+    <div class="tuner-bar" aria-label="Ajustes de tipografía en vivo">
+      <label class="tuner-control">
+        <span>Escala títulos</span>
+        <input id="titleScale" type="range" min="0.9" max="1.2" step="0.02" value="1" />
+      </label>
+      <label class="tuner-control">
+        <span>Escala cuerpo</span>
+        <input id="bodyScale" type="range" min="0.92" max="1.15" step="0.02" value="1" />
+      </label>
+      <button type="button" class="copy-prompt-btn" id="copyPromptBtn">Copiar como prompt</button>
+    </div>
+  </header>
+
+  <main class="showcase-grid">
+    <!-- 1. Portafichero con el fix visual -->
+    <section class="panel-card" aria-label="Vista previa en Portafichero">
+      <span class="panel-kicker">1. Portafichero y pestañas integradas</span>
+      <div class="active-card-banner">
+        <span>Fichero actual</span>
+        <strong>Ragú Bolognesa</strong>
+      </div>
+
+      <div class="cardbox-illustration" aria-label="Dibujo del portafichero">
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px;">
+          <span>Caja de madera · Colección Otoño / Invierno</span>
+          <span>margin-bottom: 12px</span>
+        </div>
+        <div class="wood-slot"></div>
+      </div>
+
+      <div class="folio-tabs" role="tablist" aria-label="Pestañas del fichero">
+        <button class="folio-tab" role="tab" aria-selected="false" type="button">Humita en Olla</button>
+        <button class="folio-tab" role="tab" aria-selected="true" type="button">Ragú Bolognesa</button>
+        <button class="folio-tab" role="tab" aria-selected="false" type="button">Tarta de Alcauciles</button>
+      </div>
+
+      <article class="folio-card" aria-label="Ficha activa">
+        <span class="panel-kicker">Plato principal · Cocción lenta</span>
+        <h2>Ragú Bolognesa de Domingos</h2>
+        <p class="recipe-lead-dropcap">
+          Salsa tradicional de carne cortada a cuchillo, sofrito paciente de apio, zanahoria y cebolla, leche entera y reducción lenta con tomate de estación.
+        </p>
+        <div class="meta-pills">
+          <span class="meta-pill">⏱ 3 h 30 min</span>
+          <span class="meta-pill">🍽 6 porciones</span>
+          <span class="meta-pill season">🌿 Tomate · Puerro (Pampeana)</span>
+        </div>
+      </article>
+    </section>
+
+    <!-- 2. Vista de lectura completa -->
+    <section class="panel-card reading-header" aria-label="Vista previa en Lectura de Receta">
+      <span class="panel-kicker">2. Ficha de lectura completa</span>
+      <h2>Ragú Bolognesa de Domingos</h2>
+      <p class="reading-subtitle">«El secreto no es el fuego fuerte sino el murmullo parejo de la olla destapada.»</p>
+
+      <h3 class="section-heading">
+        <span>Ingredientes</span>
+        <small style="font-size:13px;font-weight:400;color:var(--ink-muted);">Para 6 porciones</small>
+      </h3>
+      <ul class="craft-ingredients">
+        <li>
+          <span class="ing-qty">500 g</span>
+          <span class="ing-dots"></span>
+          <span class="ing-name">Roast beef picado grueso a cuchillo</span>
+        </li>
+        <li>
+          <span class="ing-qty">150 g</span>
+          <span class="ing-dots"></span>
+          <span class="ing-name">Panceta salada en bastones cortos</span>
+        </li>
+        <li>
+          <span class="ing-qty">1 ½ taza</span>
+          <span class="ing-dots"></span>
+          <span class="ing-name">Leche entera tibia</span>
+        </li>
+        <li>
+          <span class="ing-qty">600 g</span>
+          <span class="ing-dots"></span>
+          <span class="ing-name">Tomate perita maduro triturado</span>
+        </li>
+        <li>
+          <span class="ing-free">Sal gruesa, pimienta negra recién molida y nuez moscada a gusto</span>
+        </li>
+      </ul>
+
+      <h3 class="section-heading">
+        <span>Preparación paso a paso</span>
+      </h3>
+      <ol class="craft-steps">
+        <li>
+          <span class="step-badge">1</span>
+          <div>Fundir la panceta a fuego suave en olla de hierro hasta transparentar la grasa, sumar el sofrito picado muy fino y cocinar 15 minutos sin arrebatar.</div>
+        </li>
+        <li>
+          <span class="step-badge">2</span>
+          <div>Incorporar la carne en tandas, sellar bien y desglasar con vino blanco seco hasta evaporar el alcohol por completo.</div>
+        </li>
+        <li>
+          <span class="step-badge">3</span>
+          <div>Sumar la leche tibia y la nuez moscada; cuando reduzca, agregar el tomate y cocinar 2 h 30 min a hervor mínimo.</div>
+        </li>
+      </ol>
+    </section>
+
+    <!-- 3. Especimen + Índice A-Z -->
+    <aside class="panel-card" aria-label="Especimen e Índice A-Z">
+      <span class="panel-kicker">3. Muestra de caracteres e Índice A–Z</span>
+      <div class="specimen-box">
+        <p class="specimen-serif">Árbol, Ñoquis, Ragú, Limón</p>
+        <p class="specimen-italic">«Cocinar con lo que da la tierra en cada estación.»</p>
+        <p class="specimen-sans">0123456789 · ½ ¼ ¾ · 180 °C · 45 min · Lectura simple: No</p>
+      </div>
+
+      <div class="index-letter-block">
+        <div class="index-letter">H</div>
+        <div class="index-row">
+          <strong>Humita en Olla Cremosísima</strong>
+          <span>45 min</span>
+        </div>
+      </div>
+
+      <div class="index-letter-block">
+        <div class="index-letter">R</div>
+        <div class="index-row">
+          <strong>Ragú Bolognesa de Domingos</strong>
+          <span>3 h 30 min</span>
+        </div>
+        <div class="index-row">
+          <span>Coincide en: ingrediente — «tomate perita, puerro»</span>
+          <span>Otoño</span>
+        </div>
+      </div>
+
+      <div class="index-letter-block">
+        <div class="index-letter">T</div>
+        <div class="index-row">
+          <strong>Tarta Rústica de Alcauciles</strong>
+          <span>1 h 10 min</span>
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <script>
+    const root = document.documentElement;
+    const titleInput = document.getElementById('titleScale');
+    const bodyInput = document.getElementById('bodyScale');
+    const copyBtn = document.getElementById('copyPromptBtn');
+
+    function syncScale() {
+      root.style.setProperty('--title-scale', titleInput.value);
+      root.style.setProperty('--body-scale', bodyInput.value);
+    }
+
+    titleInput.addEventListener('input', syncScale);
+    bodyInput.addEventListener('input', syncScale);
+
+    copyBtn.addEventListener('click', async () => {
+      const prompt = `Elegí la Opción 01 (Imprenta Artesanal y Cálida: Fraunces + Work Sans) con escala de títulos ${titleInput.value} y escala de cuerpo ${bodyInput.value}.`;
+      try {
+        await navigator.clipboard.writeText(prompt);
+        copyBtn.textContent = '¡Prompt copiado!';
+        setTimeout(() => { copyBtn.textContent = 'Copiar como prompt'; }, 1800);
+      } catch {
+        copyBtn.textContent = prompt;
+      }
+    });
+  </script>
+</body>
+</html>
